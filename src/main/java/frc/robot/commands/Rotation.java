@@ -1,13 +1,16 @@
 package frc.robot.commands;
 
+import java.util.stream.Collector;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Command extends CommandBase {
+public class Rotation extends CommandBase {
     public SubsystemBase base;
 
-    public Command() {
-        
+    public Rotation() {
+        requires(Collector);
     }
 
     @Override
@@ -18,6 +21,7 @@ public class Command extends CommandBase {
     @Override
     public void execute() {
         
+        Robot.driveTrain.setMotorSpeed()
     }
 
     @Override
