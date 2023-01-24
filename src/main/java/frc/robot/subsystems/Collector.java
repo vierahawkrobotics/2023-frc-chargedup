@@ -1,18 +1,21 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Subsystem extends SubsystemBase {
+public class Collector extends SubsystemBase {
 
-    NEO suckingMotor = new NEO()
+    CANSparkMax leftSuckingMotor = new CANSparkMotor()
+    CANSparkMax rightSuckingMotor = new CANSparkMotor()
+    
 
-    public Subsystem() {
-        setName("name");
+    public Collector() {
+        setName("Rotation");
     }
     
-    public void setMotorSpeed(double speed){
-        suckingMotor.set(ControlMode.PercentOutput, speed)
-    
+    public void setSpeed(double speed){
+        
+
     
     }
     
