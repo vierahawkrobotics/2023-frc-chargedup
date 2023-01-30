@@ -6,19 +6,17 @@ import com.revrobotics.SparkMaxAbsoluteEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
 public class ClawSubsystem extends SubsystemBase {
+    // Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+    // Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
-}
+    // pcmCompressor.enableDigital();
+    // pcmCompressor.disable();
 
-// Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
-// Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
-
-// pcmCompressor.enableDigital();
-// pcmCompressor.disable();
-
-// boolean enabled = pcmCompressor.enabled();
-// boolean pressureSwitch = pcmCompressor.getPressureSwitchValue();
-// double current = pcmCompressor.getCompressorCurrent();
+    // boolean enabled = pcmCompressor.enabled();
+    // boolean pressureSwitch = pcmCompressor.getPressureSwitchValue();
+    // double current = pcmCompressor.getCompressorCurrent();
     public ClawSubsystem() {
         setName("claw");
     }
@@ -59,3 +57,4 @@ public class ClawSubsystem extends SubsystemBase {
     public void isFinished(){
 
     }
+}
