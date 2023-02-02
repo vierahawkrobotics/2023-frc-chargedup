@@ -7,4 +7,5 @@ public class Constants {
     public static int armMotorID = 0;
     public static double ArmALength = 0;
     public static double ArmBLength = 0;
+    public static double ArmWinchRadius = 0;
 }

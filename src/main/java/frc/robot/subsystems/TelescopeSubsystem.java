@@ -5,34 +5,39 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import edu.wpi.first.math.controller.PIDController;
 
 import frc.robot.Constants;
 
- // Left and Right movement pull/release back a string attached to a coil
- // mOTOR SET POSITION
- // CONVERT ENCODER POSITIONS TO RADIANS, VICE VERSA
+
 public class TelescopeSubsystem {
    
+    
+    /** Create Variables: Motor, Encoder, PID */
     final CANSparkMax motor = new CANSparkMax(Constants.armMotorID, MotorType.kBrushless);
     final SparkMaxAbsoluteEncoder encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
- 
-    public double getLengthToRadians(double length){
-        return (2 * Math.PI * encoder.getPosition());
-    }
+    final PIDController pid = new PIDController(getCurrentArmLength(), getEncoderInRadians(), getCurrentArmLength());
     
+    /** Using Radius, Convert Length To Radians (length/radius = radians) */
+    public double getLengthToRadians(double length){
+        return (length / Constants.ArmWinchRadius);
+    }
+    /** Convert Radians Back To Length (radians * radius = length) */
     public double getRadiansToLength(double radians){
-        return Constants.ArmALength-Math.cos(radians) * Constants.ArmBLength;
+        return (radians * Constants.ArmWinchRadius);
     }
-    public void setSpeed(double speed){
-        motor.set(speed);
+    /** Convert Encoder Position Into Radians (encoder_position * 2 * pi) */
+    public double getEncoderInRadians() {
+        return encoder.getPosition() * 2 * Math.PI;
     }
-    public double getPosition(){
-        return getPosition();
+    /** The Equation Uses "getEncoderInRadians" As The Input For The Equation "getRadiansToLength" */
+    public double getCurrentArmLength(){
+        return getRadiansToLength(getEncoderInRadians());
     }
-
-
-
-
+    /** Using A PID, Calculate The Encoder Position And Create A Certain Setpoint */
+    public void setpid (double setpoint){
+        motor.set(pid.calculate(encoder.getPosition(), setpoint));
+    }
     
 }
 
