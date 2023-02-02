@@ -5,6 +5,9 @@ public class Constants {
     public final static double ArmP = 0;
     public final static double ArmI = 0;
     public final static double ArmD = 0;
+    public final static double ScopeP = 0;
+    public final static double ScopeI = 0;
+    public final static double ScopeD = 0;
     public final static int armMotorID = 0;
     public final static double ArmALength = 0;
     public final static double ArmBLength = 0;

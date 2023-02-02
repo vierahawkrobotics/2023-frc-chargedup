@@ -6,16 +6,17 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.TelescopeSubsystem;
 
 public class RobotContainer {
-
-  public double getRotationRawAxis(int axis){
-    return driverController.getRotationRawAxis;
-  }
+  ArmSubsystem armSubsystem;
+  TelescopeSubsystem telescopeSubsystem;
 
 
-  
   public RobotContainer() {
+    armSubsystem = new ArmSubsystem();
+    telescopeSubsystem = new TelescopeSubsystem();
     configureBindings();
   }
 

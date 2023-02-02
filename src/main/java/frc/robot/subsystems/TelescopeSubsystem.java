@@ -16,7 +16,7 @@ public class TelescopeSubsystem {
     /** Create Variables: Motor, Encoder, PID */
     final CANSparkMax motor = new CANSparkMax(Constants.armMotorID, MotorType.kBrushless);
     final SparkMaxAbsoluteEncoder encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
-    final PIDController pid = new PIDController(getCurrentArmLength(), getEncoderInRadians(), getCurrentArmLength());
+    final PIDController pid = new PIDController(Constants.ScopeP,Constants.ScopeI,Constants.ScopeD);
     
     /** Using Radius, Convert Length To Radians (length/radius = radians) */
     public double getLengthToRadians(double length){
