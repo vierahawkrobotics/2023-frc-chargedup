@@ -28,41 +28,81 @@ public class ArmSubsystem extends SubsystemBase {
     // state machine for different hights
 
     // motor.set(pidController.calculate(currentRotation, target)); Done
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /***
+     * Defines the CANS spark max motor, and the motor type
+     */
     final CANSparkMax motor = new CANSparkMax(Constants.armMotorID, MotorType.kBrushless);
+    /***
+     * Defines the spark max encoder, and gets the absolut encoder
+     */
     final SparkMaxAbsoluteEncoder encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
+    /***
+     * Defines the PID controller in variables ArmP, ArmI, ArmD
+     */
     final PIDController pidController = new PIDController(Constants.ArmP, Constants.ArmI, Constants.ArmD);
+    
 
-    /*
-     * haleelfk
+    /**
+     * Sets the target of the pid
+     * @param target target in radians that the position of the arm should be in.
      */
     public void setPID(double target) {
         motor.set(pidController.calculate(encoder.getPosition(), target));
     }
 
+    /***
+     * The arms height to radians
+     * @param height The height of the arm
+     * @return Returns the height - arm A length / arm B length 
+     */
+
     public static double getHeightToRadians(double height) {
         return Math.acos((height - Constants.ArmALength) / Constants.ArmBLength);
     }
+
+    /***
+     * The arms radians to height
+     * @param radians The radians of the arm
+     * @return Returns the arm A length - radians * arm B length
+     */
 
     public static double getRadiansToHeight(double radians) {
         return Constants.ArmALength - Math.cos(radians) * Constants.ArmBLength;
     }
 
+    /***
+     * Sets the speed of the motor
+     * @param speed The speed of the motor(decimal)
+     */
+
     public void setSpeed(double speed) {
         motor.set(speed);
     }
+
+    /***
+     * Gets the position of the arm
+     * @return Returns the position of the arm
+     */
 
     public double getPosition() {
         return getPosition();
     }
 
-    public void setTarget() {
-    }
+    /***
+     * Sets the target height
+     * @param height The height and the position of the arm(decimal)
+     */
 
     public void setTargetHeight(double height) {
 
         motor.set(pidController.calculate(encoder.getPosition(), getHeightToRadians(height)));
     }
+
+    /***
+     * Sets the target rotation
+     * @param radians Calculates the pidController, radians, and gets position
+     */
 
     public void setTargetRotation(double radians) {
 
@@ -72,6 +112,11 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem() {
         setName("name");
     }
+
+    /***
+     * Sets the arsm height in contants
+     * @param mState The new state to use in the arm
+     */
 
     public void setHeight(Constants.ArmStates mState) {
         double target = 0;
@@ -95,6 +140,7 @@ public class ArmSubsystem extends SubsystemBase {
         // set to target rotation value
         setTargetRotation(targetRadian);
     }
+
 
     @Override
     public void simulationPeriodic() {
