@@ -10,7 +10,7 @@ public class SetTelescopePosition extends CommandBase {
     public double distance;
     public SetTelescopePosition(double m_distance, TelescopeSubsystem t_subsystem) {
         this.telescope_subsystem = t_subsystem;
-        addRequirements(telescope_subsystem);
+        addRequirements(t_subsystem);
         m_distance = distance;
     }
 

@@ -6,15 +6,15 @@ import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import edu.wpi.first.math.controller.PIDController;
-
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
-public class TelescopeSubsystem {
+public class TelescopeSubsystem extends SubsystemBase {
    
     
     /** Create Variables: Motor, Encoder, PID */
-    final CANSparkMax motor = new CANSparkMax(Constants.armMotorID, MotorType.kBrushless);
+    final CANSparkMax motor = new CANSparkMax(Constants.scopeMotorID, MotorType.kBrushless);
     final SparkMaxAbsoluteEncoder encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
     final PIDController pid = new PIDController(Constants.ScopeP,Constants.ScopeI,Constants.ScopeD);
     
