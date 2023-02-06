@@ -16,45 +16,50 @@ public class ArmSubsystem extends SubsystemBase {
     // function armhight to radians; Done
     // function radians to armhight; Done
 
-    // sparkmax motor + absolute encode
-    // Set speed
-    // Encoder Position
+    // sparkmax motor + absolute encode Done
+    // Set speed Done
+    // Encoder Position Done
     // ------------------------------------
-    // pidcontroller
+    // pidcontroller Done
     // function to set target position DOne
 
     // command to set target position
     // PIDController pid = new PIDController(kP, kI, kD); Done
-    // state machine for different hights
+    // state machine for different hights Done
 
     // motor.set(pidController.calculate(currentRotation, target)); Done
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
     /***
      * Defines the CANS spark max motor, and the motor type
      */
-    final CANSparkMax motor = new CANSparkMax(Constants.armMotorID, MotorType.kBrushless);
+    final static CANSparkMax motor = new CANSparkMax(Constants.armMotorID, MotorType.kBrushless);
     /***
      * Defines the spark max encoder, and gets the absolut encoder
      */
-    final SparkMaxAbsoluteEncoder encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
+    final static SparkMaxAbsoluteEncoder encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
     /***
      * Defines the PID controller in variables ArmP, ArmI, ArmD
      */
     final PIDController pidController = new PIDController(Constants.ArmP, Constants.ArmI, Constants.ArmD);
-    
+
+    public ArmSubsystem() {
+        setName("name");
+    }
 
     /**
      * Sets the target of the pid
+     * 
      * @param target target in radians that the position of the arm should be in.
      */
-    public void setPID(double target) {
+    void setPID(double target) {
         motor.set(pidController.calculate(encoder.getPosition(), target));
     }
 
     /***
      * The arms height to radians
+     * 
      * @param height The height of the arm
-     * @return Returns the height - arm A length / arm B length 
+     * @return Returns the height - arm A length / arm B length
      */
 
     public static double getHeightToRadians(double height) {
@@ -63,6 +68,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     /***
      * The arms radians to height
+     * 
      * @param radians The radians of the arm
      * @return Returns the arm A length - radians * arm B length
      */
@@ -73,48 +79,49 @@ public class ArmSubsystem extends SubsystemBase {
 
     /***
      * Sets the speed of the motor
+     * 
      * @param speed The speed of the motor(decimal)
+     * @deprecated
      */
 
-    public void setSpeed(double speed) {
+    static void setSpeed(double speed) {
         motor.set(speed);
     }
 
     /***
      * Gets the position of the arm
+     * 
      * @return Returns the position of the arm
      */
-
     public double getPosition() {
-        return getPosition();
+        return encoder.getPosition();
+    }
+
+    public double getHeightPosition() {
+        return getRadiansToHeight(encoder.getPosition());
     }
 
     /***
      * Sets the target height
+     * 
      * @param height The height and the position of the arm(decimal)
      */
-
-    public void setTargetHeight(double height) {
-
+    void setTargetHeight(double height) {
         motor.set(pidController.calculate(encoder.getPosition(), getHeightToRadians(height)));
     }
 
     /***
      * Sets the target rotation
+     * 
      * @param radians Calculates the pidController, radians, and gets position
      */
-
-    public void setTargetRotation(double radians) {
-
+    void setTargetRotation(double radians) {
         motor.set(pidController.calculate(encoder.getPosition(), radians));
-    }
-
-    public ArmSubsystem() {
-        setName("name");
     }
 
     /***
      * Sets the arsm height in contants
+     * 
      * @param mState The new state to use in the arm
      */
 
@@ -141,13 +148,9 @@ public class ArmSubsystem extends SubsystemBase {
         setTargetRotation(targetRadian);
     }
 
-
     @Override
     public void simulationPeriodic() {
 
     }
 
-    private void armRotation() {
-
-    }
 }

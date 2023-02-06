@@ -3,6 +3,7 @@ package frc.robot.commands;
 //import java.net.SocketTimeoutException;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 //import edu.wpi.first.wpilibj2.command.Subsystem;
 //import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.ArmSubsystem;
@@ -11,13 +12,13 @@ import frc.robot.subsystems.ArmSubsystem;
 //import frc.robot.RobotContainer;
 
 
-public class SetArmPosCommand extends CommandBase {
+public class SetArmStateCommand extends CommandBase {
     public ArmSubsystem arm_subsystem;
-    public double m_height;
-    public SetArmPosCommand(double height, ArmSubsystem ArmSubsystem) {
+    public Constants.ArmStates m_state;
+    public SetArmStateCommand(Constants.ArmStates state, ArmSubsystem ArmSubsystem) {
         this.arm_subsystem = ArmSubsystem;
         addRequirements(arm_subsystem);
-        m_height = height;
+        m_state = state;
     }
 
     // @Override
@@ -27,7 +28,7 @@ public class SetArmPosCommand extends CommandBase {
 
     @Override
     public void execute() {
-        arm_subsystem.targetRadian = ArmSubsystem.getHeightToRadians(m_height);
+        arm_subsystem.setHeight(m_state);
     }
 
     @Override

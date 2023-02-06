@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+  public static Object ArmSubsystem;
+
+private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
 
@@ -40,10 +42,10 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
   }
+ic() {}
 
   @Override
-  public void autonomousPeriodic() {}
-
+  public void autonomousPeriod
   @Override
   public void autonomousExit() {}
 
