@@ -10,25 +10,31 @@ import frc.robot.subsystems.ArmSubsystem;
 //import frc.robot.Constants;
 //import frc.robot.Robot;
 //import frc.robot.RobotContainer;
+import frc.robot.subsystems.TelescopeSubsystem;
 
 
 public class SetArmStateCommand extends CommandBase {
     public ArmSubsystem arm_subsystem;
+    public TelescopeSubsystem tSubsystem;
     public Constants.ArmStates m_state;
-    public SetArmStateCommand(Constants.ArmStates state, ArmSubsystem ArmSubsystem) {
+    public SetArmStateCommand(Constants.ArmStates state, ArmSubsystem ArmSubsystem, TelescopeSubsystem tSubsystem) {
         this.arm_subsystem = ArmSubsystem;
+        this.tSubsystem = tSubsystem;
         addRequirements(arm_subsystem);
+        addRequirements(tSubsystem);
         m_state = state;
     }
 
-    // @Override
-    // public void initialize() {
-    //     arm_subsystem.targetRadian = ArmSubsystem.getHeightToRadians(m_height);
-    // }
+    @Override
+    public void initialize() {
+        arm_subsystem.setHeight(m_state);
+        tSubsystem.setHeight(m_state);
+    }
 
     @Override
     public void execute() {
         arm_subsystem.setHeight(m_state);
+        tSubsystem.setHeight(m_state);
     }
 
     @Override

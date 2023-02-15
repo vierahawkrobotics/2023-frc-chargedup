@@ -6,8 +6,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.SetArmPosCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
+
+//import java.util.function.Supplier;
+
+import edu.wpi.first.wpilibj.Joystick;
 
 public class RobotContainer {
   ArmSubsystem armSubsystem;
@@ -20,7 +26,14 @@ public class RobotContainer {
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    
+    Joystick joystick = new Joystick(0);
+    new JoystickButton(joystick, Constants.buttonNumber0).onTrue(new SetArmPosCommand(0.2, armSubsystem));
+    new JoystickButton(joystick, Constants.buttonNumber1).onTrue(new SetArmPosCommand(Constants.lowGoalHeight, armSubsystem));
+    new JoystickButton(joystick, Constants.buttonNumber2).onTrue(new SetArmPosCommand(Constants.middleGoalHeight, armSubsystem));
+    new JoystickButton(joystick, Constants.buttonNumber3).onTrue(new SetArmPosCommand(Constants.highGoalHeight, armSubsystem));
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

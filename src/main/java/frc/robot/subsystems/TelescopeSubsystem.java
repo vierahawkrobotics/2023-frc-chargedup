@@ -6,11 +6,11 @@ import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import edu.wpi.first.math.controller.PIDController;
-
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
-public class TelescopeSubsystem {
+public class TelescopeSubsystem extends SubsystemBase {
    
     
     /** Create Variables: Motor, Encoder, PID */
@@ -18,6 +18,12 @@ public class TelescopeSubsystem {
     final SparkMaxAbsoluteEncoder encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
     final PIDController pid = new PIDController(Constants.ScopeP,Constants.ScopeI,Constants.ScopeD);
     
+    public double targetLength = 0;
+
+    public TelescopeSubsystem() {
+        setName("name");
+    }
+
     /** Using Radius, Convert Length To Radians (length/radius = radians) */
     public double getLengthToRadians(double length){
         return (length / Constants.ArmWinchRadius);
@@ -39,5 +45,30 @@ public class TelescopeSubsystem {
         motor.set(pid.calculate(encoder.getPosition(), setpoint));
     }
     
+    public void setHeight(Constants.ArmStates mState) {
+        double target = 0;
+        switch (mState) {
+            case Low:
+                target = getLengthToRadians(Constants.lowGoalTeleLength);
+                break;
+            case Middle:
+                target = getLengthToRadians(Constants.middleGoalTeleLength);
+                break;
+            case High:
+                target = getLengthToRadians(Constants.highGoalTeleLength);
+                break;
+        }
+        targetLength = target;
+    }
+
+    @Override
+    public void periodic() {
+        setpid(getLengthToRadians(targetLength));
+    }
+
+    @Override
+    public void simulationPeriodic() {
+
+    }
 }
 
