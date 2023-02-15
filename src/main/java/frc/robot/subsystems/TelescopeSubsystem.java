@@ -14,7 +14,7 @@ public class TelescopeSubsystem extends SubsystemBase {
    
     
     /** Create Variables: Motor, Encoder, PID */
-    final CANSparkMax motor = new CANSparkMax(Constants.armMotorID, MotorType.kBrushless);
+    final CANSparkMax motor = new CANSparkMax(Constants.scopeMotorID, MotorType.kBrushless);
     final SparkMaxAbsoluteEncoder encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
     final PIDController pid = new PIDController(Constants.ScopeP,Constants.ScopeI,Constants.ScopeD);
     

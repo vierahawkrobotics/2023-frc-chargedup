@@ -62,7 +62,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @return Returns the height - arm A length / arm B length
      */
 
-    public static double getHeightToRadians(double height) {
+    static double getHeightToRadians(double height) {
         return Math.acos((height - Constants.ArmALength) / Constants.ArmBLength);
     }
 
@@ -73,19 +73,8 @@ public class ArmSubsystem extends SubsystemBase {
      * @return Returns the arm A length - radians * arm B length
      */
 
-    public static double getRadiansToHeight(double radians) {
+    static double getRadiansToHeight(double radians) {
         return Constants.ArmALength - Math.cos(radians) * Constants.ArmBLength;
-    }
-
-    /***
-     * Sets the speed of the motor
-     * 
-     * @param speed The speed of the motor(decimal)
-     * @deprecated
-     */
-
-    static void setSpeed(double speed) {
-        motor.set(speed);
     }
 
     /***
@@ -140,6 +129,10 @@ public class ArmSubsystem extends SubsystemBase {
         }
 
         targetRadian = target;
+    }
+
+    public void setHeight(double height) {
+        targetRadian = getHeightToRadians(height);
     }
 
     @Override
