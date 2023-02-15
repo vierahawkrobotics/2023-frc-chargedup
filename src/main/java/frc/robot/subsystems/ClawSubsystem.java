@@ -1,27 +1,38 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
-
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+
 public class ClawSubsystem extends SubsystemBase {
+    DoubleSolenoid solenoid1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+    DoubleSolenoid solenoid2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 3);
 
-}
 
-// Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
-// Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
-// pcmCompressor.enableDigital();
-// pcmCompressor.disable();
-
-// boolean enabled = pcmCompressor.enabled();
-// boolean pressureSwitch = pcmCompressor.getPressureSwitchValue();
-// double current = pcmCompressor.getCompressorCurrent();
     public ClawSubsystem() {
         setName("claw");
+        solenoid1.set(Value.kReverse);
+        solenoid2.set(Value.kReverse);
     }
+
+    public void OpenClaw(){
+        solenoid1.set(Value.kForward);
+        solenoid2.set(Value.kForward);
+    }
+
+    public void CloseClaw(){
+        solenoid1.set(Value.kReverse);
+        solenoid2.set(Value.kReverse);
+    }
+
+    public void toggleClaw(){
+        solenoid1.toggle();
+        solenoid2.toggle();
+    }
+
     @Override
     public void periodic() {
 
@@ -31,31 +42,4 @@ public class ClawSubsystem extends SubsystemBase {
     public void simulationPeriodic() {
 
     }
-
-    public void OpenClaw(){
-
-
-    }
-
-    public void CloseClaw(){
-            
-    }
-
-
-
-
-    public void initialize(){
-
-    }
-
-    public void execute(){
-        
-    }
-
-    public void end(){
-
-    }
-
-    public void isFinished(){
-
-    }
+}

@@ -17,5 +17,9 @@ public class Constants {
         Middle,
         High;
     }
-    
+    public enum ClawStates{
+        Open,
+        Closed,
+        Toggle;
+    }   
 }

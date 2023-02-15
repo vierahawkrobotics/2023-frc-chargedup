@@ -8,12 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 public class RobotContainer {
-
-  public double getRotationRawAxis(int axis){
-    return driverController.getRotationRawAxis;
-  }
-
-
   
   public RobotContainer() {
     configureBindings();
