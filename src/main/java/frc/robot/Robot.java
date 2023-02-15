@@ -42,10 +42,9 @@ private Command m_autonomousCommand;
       m_autonomousCommand.schedule();
     }
   }
-() {}
 
   @Override
-  public void autonomousPeriod{
+  public void autonomousPeriodic(){
 
   }
   
