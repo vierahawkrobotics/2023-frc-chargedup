@@ -18,6 +18,12 @@ public class TelescopeSubsystem extends SubsystemBase {
     final SparkMaxAbsoluteEncoder encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
     final PIDController pid = new PIDController(Constants.ScopeP,Constants.ScopeI,Constants.ScopeD);
     
+    public double targetLength = 0;
+
+    public TelescopeSubsystem() {
+        setName("name");
+    }
+
     /** Using Radius, Convert Length To Radians (length/radius = radians) */
     public double getLengthToRadians(double length){
         return (length / Constants.ArmWinchRadius);
@@ -39,5 +45,30 @@ public class TelescopeSubsystem extends SubsystemBase {
         motor.set(pid.calculate(encoder.getPosition(), setpoint));
     }
     
+    public void setHeight(Constants.ArmStates mState) {
+        double target = 0;
+        switch (mState) {
+            case Low:
+                target = getLengthToRadians(Constants.lowGoalTeleLength);
+                break;
+            case Middle:
+                target = getLengthToRadians(Constants.middleGoalTeleLength);
+                break;
+            case High:
+                target = getLengthToRadians(Constants.highGoalTeleLength);
+                break;
+        }
+        targetLength = target;
+    }
+
+    @Override
+    public void periodic() {
+        setpid(getLengthToRadians(targetLength));
+    }
+
+    @Override
+    public void simulationPeriodic() {
+
+    }
 }
 

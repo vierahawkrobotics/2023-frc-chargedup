@@ -14,23 +14,21 @@ public class SetTelescopePosition extends CommandBase {
         m_distance = distance;
     }
 
-    
-
     @Override
     public void initialize() {
         double setpoint = telescope_subsystem.getLengthToRadians(distance);
-        telescope_subsystem.setpid(setpoint);
+        telescope_subsystem.targetLength = setpoint;
     }
 
     @Override
     public void execute() {
         double setpoint = telescope_subsystem.getLengthToRadians(distance);
-        telescope_subsystem.setpid(setpoint);
+        telescope_subsystem.targetLength = setpoint;
     }
 
     @Override
     public void end(boolean ending) {
-
+        
     }
 
     @Override
