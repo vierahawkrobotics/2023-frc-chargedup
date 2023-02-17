@@ -4,7 +4,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import java.lang.Math;
 import frc.robot.Constants;
 import edu.wpi.first.math.controller.PIDController;
@@ -44,6 +45,13 @@ public class ArmSubsystem extends SubsystemBase {
 
     public ArmSubsystem() {
         setName("name");
+
+        ShuffleboardTab tab = Shuffleboard.getTab("Tab Title");
+        //tab.addNumber(getName(), null)
+        tab.addNumber("Motor Position:", () -> {return encoder.getPosition();});
+        tab.addNumber("Motor Height:", () -> {return ArmSubsystem.getRadiansToHeight(encoder.getPosition());});
+        //tab.addNumber("Length of Arm:", () -> {return tSubsystem.getRadiansToLength(encoder.getPosition());});
+        tab.addNumber("Motor Input:", () -> {return motor.get();});
     }
 
     /**

@@ -6,9 +6,11 @@ import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
 
 public class TelescopeSubsystem extends SubsystemBase {
    
@@ -22,6 +24,14 @@ public class TelescopeSubsystem extends SubsystemBase {
 
     public TelescopeSubsystem() {
         setName("name");
+
+        ShuffleboardTab tab = Shuffleboard.getTab("Tab Title");
+        //tab.addNumber(getName(), null)
+        tab.addNumber("Motor position:", () -> {return encoder.getPosition();});
+        tab.addNumber("Motor Height:", () -> {return ArmSubsystem.getRadiansToHeight(encoder.getPosition());});
+        tab.addNumber("Length of Arm:", () -> {return getRadiansToLength(encoder.getPosition());});
+        tab.addNumber("PID Output:", () -> {return motor.get();});
+    
     }
 
     /** Using Radius, Convert Length To Radians (length/radius = radians) */
@@ -60,6 +70,10 @@ public class TelescopeSubsystem extends SubsystemBase {
         }
         targetLength = target;
     }
+    //motor position(rotation)--Done
+    //motor height
+    //length of arm--Done
+    //output of pid
 
     @Override
     public void periodic() {
