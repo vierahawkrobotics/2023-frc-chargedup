@@ -24,3 +24,11 @@ public class Constants {
         High;
     }
 }
+
+
+//~37 distance between fully extended arm touching ground and robot front
+//64.77 cm arm A length
+//71.12 cm - 10in. arm B length
+//12 in. claw pads to armB
+//Claw <2lb
+//Whole arm ~15 lb
