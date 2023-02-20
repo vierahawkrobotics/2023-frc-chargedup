@@ -4,7 +4,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import java.lang.Math;
 import frc.robot.Constants;
 import edu.wpi.first.math.controller.PIDController;
@@ -44,6 +45,13 @@ public class ArmSubsystem extends SubsystemBase {
 
     public ArmSubsystem() {
         setName("name");
+
+        ShuffleboardTab tab = Shuffleboard.getTab("Tab Title");
+        //tab.addNumber(getName(), null)
+        tab.addNumber("Motor Position:", () -> {return encoder.getPosition();});
+        tab.addNumber("Motor Height:", () -> {return ArmSubsystem.getRadiansToHeight(encoder.getPosition());});
+        //tab.addNumber("Length of Arm:", () -> {return tSubsystem.getRadiansToLength(encoder.getPosition());});
+        tab.addNumber("Motor Input:", () -> {return motor.get();});
     }
 
     /**
@@ -62,7 +70,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @return Returns the height - arm A length / arm B length
      */
 
-    public static double getHeightToRadians(double height) {
+    static double getHeightToRadians(double height) {
         return Math.acos((height - Constants.ArmALength) / Constants.ArmBLength);
     }
 
@@ -73,19 +81,8 @@ public class ArmSubsystem extends SubsystemBase {
      * @return Returns the arm A length - radians * arm B length
      */
 
-    public static double getRadiansToHeight(double radians) {
+    static double getRadiansToHeight(double radians) {
         return Constants.ArmALength - Math.cos(radians) * Constants.ArmBLength;
-    }
-
-    /***
-     * Sets the speed of the motor
-     * 
-     * @param speed The speed of the motor(decimal)
-     * @deprecated
-     */
-
-    static void setSpeed(double speed) {
-        motor.set(speed);
     }
 
     /***
@@ -140,6 +137,10 @@ public class ArmSubsystem extends SubsystemBase {
         }
 
         targetRadian = target;
+    }
+
+    public void setHeight(double height) {
+        targetRadian = getHeightToRadians(height);
     }
 
     @Override

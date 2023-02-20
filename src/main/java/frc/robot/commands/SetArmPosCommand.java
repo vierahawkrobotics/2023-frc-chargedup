@@ -27,7 +27,7 @@ public class SetArmPosCommand extends CommandBase {
 
     @Override
     public void execute() {
-        arm_subsystem.targetRadian = ArmSubsystem.getHeightToRadians(m_height);
+        arm_subsystem.setHeight(m_height);
     }
 
     @Override

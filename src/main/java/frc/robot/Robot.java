@@ -44,10 +44,9 @@ private Command m_autonomousCommand;
   }
 
   @Override
-  public void autonomousPeriodic(){
+  public void autonomousPeriodic() {
 
   }
-  
   @Override
   public void autonomousExit() {}
 
