@@ -30,7 +30,7 @@ public class JoystickArmStateCommand extends CommandBase {
         
     }
 
-    void ArmUp(){
+    void ArmDown(){
        
         if (state == Constants.ArmState.Low) {
             return;
