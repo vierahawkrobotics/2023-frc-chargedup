@@ -8,7 +8,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -25,12 +25,12 @@ public class TelescopeSubsystem extends SubsystemBase {
     public TelescopeSubsystem() {
         setName("name");
 
-        ShuffleboardTab tab = Shuffleboard.getTab("Tab Title");
+        ShuffleboardTab tab = Shuffleboard.getTab("Telescope Arm");
         //tab.addNumber(getName(), null)
         tab.addNumber("Motor position:", () -> {return encoder.getPosition();});
         tab.addNumber("Motor Height:", () -> {return ArmSubsystem.getRadiansToHeight(encoder.getPosition());});
         tab.addNumber("Length of Arm:", () -> {return getRadiansToLength(encoder.getPosition());});
-        tab.addNumber("PID Output:", () -> {return motor.get();});
+        tab.addNumber("Motor intput:", () -> {return motor.get();});
     
     }
 
