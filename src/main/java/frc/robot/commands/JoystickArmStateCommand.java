@@ -1,20 +1,21 @@
 package frc.robot.commands;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
 import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class JoystickArmStateCommand extends CommandBase {
     public ArmSubsystem arm;
-    public ClawSubsystem claw;
+    public Subsystem claw;
     public int state;
 
-    static Constants.ArmStates state = Constants.ArmState.Low;
+    static Constants.ArmStates currentState = Constants.ArmStates.Low;
 
-    public JoystickArmStateCommand(int state, ArmSubsystem arm, ClawSubsystem claw ) {
+    public JoystickArmStateCommand(int state, ArmSubsystem arm, Subsystem claw ) {
         this.arm = arm;
         this.claw = claw;
         this.state = state;
@@ -22,17 +23,17 @@ public class JoystickArmStateCommand extends CommandBase {
         addRequirements(this.claw);
     }
 
-    void ArmUp(){
+    void armUp(){
 
-        if(state == Constants.ArmState.High) {
+        if(currentState == Constants.ArmStates.High) {
             return;
         }
         
     }
 
-    void ArmDown(){
+    void armDown(){
        
-        if (state == Constants.ArmState.Low) {
+        if (currentState == Constants.ArmStates.Low) {
             return;
         }  
 
@@ -46,27 +47,13 @@ public class JoystickArmStateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        
-
-
-
-
-
-
-
-
-
-
-        if (state == Constants.ArmState.Low) {
-            ArmUp();
+        if (state == 1) {
+            armUp();
         }  
 
         else if (state == -1) {
-            ArmDown();
+            armDown();
         }
-    }
-
-    private void ArmDown() {
     }
 
     @Override
