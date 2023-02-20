@@ -29,10 +29,11 @@ public class RobotContainer {
   private void configureBindings() {
     
     Joystick joystick = new Joystick(0);
-    new JoystickButton(joystick, Constants.buttonNumber0).onTrue(new SetArmPosCommand(0.2, armSubsystem));
-    new JoystickButton(joystick, Constants.buttonNumber1).onTrue(new SetArmPosCommand(Constants.lowGoalHeight, armSubsystem));
-    new JoystickButton(joystick, Constants.buttonNumber2).onTrue(new SetArmPosCommand(Constants.middleGoalHeight, armSubsystem));
-    new JoystickButton(joystick, Constants.buttonNumber3).onTrue(new SetArmPosCommand(Constants.highGoalHeight, armSubsystem));
+    new JoystickButton(joystick, 0).onTrue(new SetArmPosCommand(0.2, armSubsystem));
+    new JoystickButton(joystick, 1).onTrue(new SetArmPosCommand(Constants.lowGoalHeight, armSubsystem));
+    new JoystickButton(joystick, 2).onTrue(new SetArmPosCommand(Constants.middleGoalHeight, armSubsystem));
+    new JoystickButton(joystick, 3).onTrue(new SetArmPosCommand(Constants.highGoalHeight, armSubsystem));
+    
   }
 
   public Command getAutonomousCommand() {
