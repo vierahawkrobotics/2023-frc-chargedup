@@ -1,27 +1,28 @@
 package frc.robot.commands;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.TelescopeSubystem;
 
 public class JoystickArmStateCommand extends CommandBase {
     public ArmSubsystem arm;
     public ClawSubsystem claw;
     public int state;
 
-    static Constants.ArmStates state = new Constants.ArmState.Low;
+    static Constants.ArmStates state = Constants.ArmState.Low;
 
     public JoystickArmStateCommand(int state, ArmSubsystem arm, ClawSubsystem claw ) {
-        this.arm = Artem;
+        this.arm = arm;
         this.claw = claw;
         this.state = state;
-        addrequirements(this.arm);
-        addrequirements(this.claw);
+        addRequirements(this.arm);
+        addRequirements(this.claw);
     }
 
-    
-    void armUp(){
+    void ArmUp(){
 
         if(state == Constants.ArmState.High) {
             return;
@@ -29,7 +30,7 @@ public class JoystickArmStateCommand extends CommandBase {
         
     }
 
-    void armUp(){
+    void ArmUp(){
        
         if (state == Constants.ArmState.Low) {
             return;
@@ -57,12 +58,15 @@ public class JoystickArmStateCommand extends CommandBase {
 
 
         if (state == Constants.ArmState.Low) {
-            armUp();
+            ArmUp();
         }  
 
         else if (state == -1) {
-            armDown();
+            ArmDown();
         }
+    }
+
+    private void ArmDown() {
     }
 
     @Override

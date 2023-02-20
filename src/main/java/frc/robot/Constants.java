@@ -27,6 +27,7 @@ public class Constants {
     public final static int buttonNumber1 = 1;
     public final static int buttonNumber2 = 2;
     public final static int buttonNumber3 = 3;
+    public static final String ArmState = null;
     public enum ArmStates{
         Low,
         Middle,
