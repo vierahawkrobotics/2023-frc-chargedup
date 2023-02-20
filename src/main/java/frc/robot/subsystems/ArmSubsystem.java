@@ -142,6 +142,7 @@ public class ArmSubsystem extends SubsystemBase {
     public void setHeight(double height) {
         targetRadian = getHeightToRadians(height);
     }
+    
     void limits(){
 
         if(getPosition() > getHeightToRadians(163)){
