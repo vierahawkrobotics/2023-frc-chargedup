@@ -25,7 +25,9 @@ public class RobotContainer {
     telescopeSubsystem = new TelescopeSubsystem();
     configureBindings();
   }
-
+//FYI: you can rebind the buttons on the back on the controller by holding down the middle back button, 
+//pressing the button you want to rebind to, and then the button you want to be rebinded
+//example: Hold down Back Middle button, press A, press Back Left
   private void configureBindings() {
     
     Joystick joystick = new Joystick(0);
