@@ -134,6 +134,11 @@ public class ArmSubsystem extends SubsystemBase {
             case High:
                 target = getHeightToRadians(Constants.highGoalHeight);
                 break;
+            case Ground:
+                target = getHeightToRadians(Constants.groundGoalHeight);
+                break;
+            default:
+                break;
         }
 
         targetRadian = target;

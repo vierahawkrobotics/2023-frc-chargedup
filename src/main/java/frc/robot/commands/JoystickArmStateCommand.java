@@ -29,20 +29,45 @@ public class JoystickArmStateCommand extends CommandBase {
             return;
         }
         
-    }
 
+        if(currentState == Constants.ArmStates.Middle) {
+            currentState = Constants.ArmStates.High;
+        
+        }
+        else if(currentState == Constants.ArmStates.Low) {
+            currentState = Constants.ArmStates.Middle;
+        }
+
+        else if(currentState == Constants.ArmStates.Ground) {
+            currentState = Constants.ArmStates.Low;
+
+        }        
+    }
     void armDown(){
        
-        if (currentState == Constants.ArmStates.Low) {
+        if (currentState == Constants.ArmStates.Ground) {
             return;
         }  
 
+        if(currentState == Constants.ArmStates.Low) {
+            currentState = Constants.ArmStates.Ground;
+
+        }
+
+        else if(currentState == Constants.ArmStates.Middle) {
+            currentState = Constants.ArmStates.Low;
+
+        }
+        
+        else if(currentState == Constants.ArmStates.High) {
+            currentState = Constants.ArmStates.Middle;
+
+        }
     }
 
     @Override
     public void initialize() {
 
-        state = -1;
     }
 
     @Override
@@ -63,6 +88,6 @@ public class JoystickArmStateCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 }

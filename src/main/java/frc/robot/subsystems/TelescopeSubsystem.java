@@ -8,7 +8,6 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -55,7 +54,7 @@ public class TelescopeSubsystem extends SubsystemBase {
         motor.set(pid.calculate(encoder.getPosition(), setpoint));
     }
     
-    public void setHeight(Constants.ArmStates mState) {
+    public void setLength(Constants.ArmStates mState) {
         double target = 0;
         switch (mState) {
             case Low:
@@ -66,6 +65,11 @@ public class TelescopeSubsystem extends SubsystemBase {
                 break;
             case High:
                 target = getLengthToRadians(Constants.highGoalTeleLength);
+                break;
+            case Ground:
+                target = getLengthToRadians(Constants.groundGoalTeleLength);
+                break;
+            default:
                 break;
         }
         targetLength = target;
