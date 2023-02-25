@@ -3,19 +3,18 @@ package frc.robot.commands;
 
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-
 import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.TelescopeSubsystem;
 
 public class JoystickArmStateCommand extends CommandBase {
     public ArmSubsystem arm;
-    public Subsystem claw;
+    public TelescopeSubsystem claw;
     public int state;
 
     static Constants.ArmStates currentState = Constants.ArmStates.Low;
 
-    public JoystickArmStateCommand(int state, ArmSubsystem arm, Subsystem claw ) {
+    public JoystickArmStateCommand(int state, ArmSubsystem arm, TelescopeSubsystem claw ) {
         this.arm = arm;
         this.claw = claw;
         this.state = state;
@@ -70,6 +69,9 @@ public class JoystickArmStateCommand extends CommandBase {
         else if (state == -1) {
             armDown();
         }
+
+        arm.setHeight(currentState);
+        claw.setLength(currentState);
     }
 
     @Override

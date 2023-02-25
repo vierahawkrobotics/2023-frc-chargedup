@@ -7,13 +7,16 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.JoystickArmStateCommand;
 import frc.robot.commands.SetArmPosCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
 
+
 //import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
@@ -32,9 +35,12 @@ public class RobotContainer {
 //example: Hold down Back Middle button, press A, press Back Left
   private void configureBindings() {
     ShuffleboardTab tab = Shuffleboard.getTab("TestArmTab");
-    tab.
     
-    Joystick joystick = new Joystick(0);
+    XboxController joystick = new XboxController(0);
+    new Trigger(joystick.povUp(null)).onTrue(new JoystickArmStateCommand(1, armSubsystem, telescopeSubsystem));
+    new Trigger(joystick.povDown(null)). onTrue(new JoystickArmStateCommand(-1, armSubsystem, telescopeSubsystem));
+
+
     new JoystickButton(joystick, 0).onTrue(new SetArmPosCommand(0.2, armSubsystem));
     new JoystickButton(joystick, 1).onTrue(new SetArmPosCommand(Constants.lowGoalHeight, armSubsystem));
     new JoystickButton(joystick, 2).onTrue(new SetArmPosCommand(Constants.middleGoalHeight, armSubsystem));
