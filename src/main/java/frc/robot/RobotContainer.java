@@ -32,7 +32,8 @@ public class RobotContainer {
 //example: Hold down Back Middle button, press A, press Back Left
   private void configureBindings() {
     ShuffleboardTab tab = Shuffleboard.getTab("TestArmTab");
-    tab.
+    tab.add("X", 0.9).getEntry();
+    tab.add("Y", 0.1).getEntry();
     
     Joystick joystick = new Joystick(0);
     new JoystickButton(joystick, 0).onTrue(new SetArmPosCommand(0.2, armSubsystem));
