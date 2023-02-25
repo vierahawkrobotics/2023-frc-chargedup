@@ -20,7 +20,7 @@ public class TelescopeSubsystem extends SubsystemBase {
     final SparkMaxAbsoluteEncoder encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
     final PIDController pid = new PIDController(Constants.ScopeP,Constants.ScopeI,Constants.ScopeD);
     
-    public double targetLength = 0;
+    static double targetLength = 0;
 
     public TelescopeSubsystem() {
         setName("name");
@@ -53,6 +53,18 @@ public class TelescopeSubsystem extends SubsystemBase {
     /** Using A PID, Calculate The Encoder Position And Create A Certain Setpoint */
     public void setpid (double setpoint){
         motor.set(pid.calculate(encoder.getPosition(), setpoint));
+    }
+
+    double MaxLengthValue() {
+        if(ArmSubsystem.getTargetRadian() > 1.4) return 1;
+
+        return Math.min(Math.max(
+            ((Constants.clawLength+Constants.armHeight)/Math.cos(ArmSubsystem.getTargetRadian())-Constants.ArmALength)/Constants.ArmBLength
+        ,0), 1);
+    }
+
+    public void setLength(double v) {
+        targetLength = Math.min(Math.max(v,0),MaxLengthValue());
     }
     
     public void setLength(Constants.ArmStates mState) {

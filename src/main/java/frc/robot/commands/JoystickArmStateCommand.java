@@ -25,43 +25,34 @@ public class JoystickArmStateCommand extends CommandBase {
 
     void armUp(){
 
-        if(currentState == Constants.ArmStates.High) {
-            return;
-        }
-        
-
-        if(currentState == Constants.ArmStates.Middle) {
-            currentState = Constants.ArmStates.High;
-        
-        }
-        else if(currentState == Constants.ArmStates.Low) {
-            currentState = Constants.ArmStates.Middle;
-        }
-
-        else if(currentState == Constants.ArmStates.Ground) {
-            currentState = Constants.ArmStates.Low;
-
-        }        
+        switch(currentState) {
+            case High:
+                return;
+            case Middle:
+                currentState = Constants.ArmStates.High;
+                return;
+            case Low:
+                currentState = Constants.ArmStates.Middle;
+                return;
+            case Ground:
+                currentState = Constants.ArmStates.Low;
+                return;
+        }      
     }
     void armDown(){
        
-        if (currentState == Constants.ArmStates.Ground) {
-            return;
-        }  
-
-        if(currentState == Constants.ArmStates.Low) {
-            currentState = Constants.ArmStates.Ground;
-
-        }
-
-        else if(currentState == Constants.ArmStates.Middle) {
-            currentState = Constants.ArmStates.Low;
-
-        }
-        
-        else if(currentState == Constants.ArmStates.High) {
-            currentState = Constants.ArmStates.Middle;
-
+        switch(currentState) {
+            case Ground:
+                return;
+            case Middle:
+                currentState = Constants.ArmStates.Low;
+                return;
+            case Low:
+                currentState = Constants.ArmStates.Ground;
+                return;
+            case High:
+                currentState = Constants.ArmStates.Middle;
+                return;
         }
     }
 

@@ -12,24 +12,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
-    public double targetRadian;
-
-    // function armhight to radians; Done
-    // function radians to armhight; Done
-
-    // sparkmax motor + absolute encode Done
-    // Set speed Done
-    // Encoder Position Done
-    // ------------------------------------
-    // pidcontroller Done
-    // function to set target position DOne
-
-    // command to set target position
-    // PIDController pid = new PIDController(kP, kI, kD); Done
-    // state machine for different hights Done
-
-    // motor.set(pidController.calculate(currentRotation, target)); Done
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    static double targetRadian;
+    
     /***
      * Defines the CANS spark max motor, and the motor type
      */
@@ -148,15 +132,21 @@ public class ArmSubsystem extends SubsystemBase {
         targetRadian = getHeightToRadians(height);
     }
     
-    void limits(){
+    public static void setTargetRadian(double v) {
+        targetRadian = Math.min(Math.max(v,0),135/180*Math.PI);
+    }
 
-        if(getPosition() > getHeightToRadians(163)){
-            return;
-        }
-        if(getPosition() < getHeightToRadians(0.5)){
-            return;
-        }
-    } 
+    public static double getTargetRadian() {
+        return targetRadian;
+    }
+
+    public void setTargetRadianT(double v) {
+        setTargetRadian(v);
+    }
+
+    public double getTargetRadianT() {
+        return targetRadian;
+    }
 
     @Override
     public void periodic() {
