@@ -24,17 +24,15 @@ public class RobotContainer {
 
   public RobotContainer() {
     armSubsystem = new ArmSubsystem();
-    telescopeSubsystem = new TelescopeSubsystem();
+    //telescopeSubsystem = new TelescopeSubsystem();
     configureBindings();
   }
 //FYI: you can rebind the buttons on the back on the controller by holding down the middle back button, 
 //pressing the button you want to rebind to, and then the button you want to be rebinded
 //example: Hold down Back Middle button, press A, press Back Left
   private void configureBindings() {
-    ShuffleboardTab tab = Shuffleboard.getTab("TestArmTab");
-    tab.add("X", 0.9).getEntry();
-    tab.add("Y", 0.1).getEntry();
-    
+    //tab.add("X", 0.9).getEntry();
+    //tab.add("Y", 0.1).getEntry();
     Joystick joystick = new Joystick(0);
     new JoystickButton(joystick, 0).onTrue(new SetArmPosCommand(0.2, armSubsystem));
     new JoystickButton(joystick, 1).onTrue(new SetArmPosCommand(Constants.lowGoalHeight, armSubsystem));

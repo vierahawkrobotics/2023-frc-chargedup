@@ -2,9 +2,8 @@ package frc.robot.subsystems;
 
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -17,14 +16,14 @@ public class TelescopeSubsystem extends SubsystemBase {
     
     /** Create Variables: Motor, Encoder, PID */
     final CANSparkMax motor = new CANSparkMax(Constants.scopeMotorID, MotorType.kBrushless);
-    final SparkMaxAbsoluteEncoder encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
+    final RelativeEncoder encoder = motor.getEncoder();
     final PIDController pid = new PIDController(Constants.ScopeP,Constants.ScopeI,Constants.ScopeD);
     
     static double targetLength = 0;
 
     public TelescopeSubsystem() {
         setName("name");
-
+        encoder.setPosition(0);
         ShuffleboardTab tab = Shuffleboard.getTab("Telescope Arm");
         //tab.addNumber(getName(), null)
         tab.addNumber("Motor position:", () -> {return encoder.getPosition();});
