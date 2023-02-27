@@ -19,7 +19,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
     final static CANSparkMax motor = new CANSparkMax(Constants.armMotorID, MotorType.kBrushless);
     /***
-     * Defines the spark max encoder, and gets the absolut encoder
+     * Defines the spark max encoder, and gets the absolute encoder
      */
     final static SparkMaxAbsoluteEncoder encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
     /***
