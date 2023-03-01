@@ -14,8 +14,6 @@ import frc.robot.subsystems.TelescopeSubsystem;
 //import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class RobotContainer {
   ArmSubsystem armSubsystem;

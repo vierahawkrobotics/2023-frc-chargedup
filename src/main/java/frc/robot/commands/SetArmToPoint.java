@@ -21,13 +21,13 @@ public class SetArmToPoint extends CommandBase {
 
     @Override
     public void initialize() {
-        tele.setLength((Math.sqrt(x*x+y*y)-Constants.ArmALength)/Constants.ArmBLength);
+        tele.setLength((Math.sqrt(x*x+y*y)-Constants.ArmALength));
         arm.setTargetRadianT(Math.PI-Math.atan2(y, x));
     }
 
     @Override
     public void execute() {
-        tele.setLength((Math.sqrt(x*x+y*y)-Constants.ArmALength)/Constants.ArmBLength);
+        tele.setLength((Math.sqrt(x*x+y*y)-Constants.ArmALength));
         arm.setTargetRadianT(Math.PI-Math.atan2(y, x));
     }
 

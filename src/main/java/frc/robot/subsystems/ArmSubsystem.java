@@ -151,7 +151,9 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // set to target rotation value
-        setTargetRotation(targetRadian);
+        //setTargetRotation(targetRadian);
+        System.out.println(encoder.getPosition());
+
     }
 
     @Override
