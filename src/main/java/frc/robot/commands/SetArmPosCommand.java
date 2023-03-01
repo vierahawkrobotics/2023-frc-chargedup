@@ -14,10 +14,10 @@ import frc.robot.subsystems.ArmSubsystem;
 public class SetArmPosCommand extends CommandBase {
     public ArmSubsystem arm_subsystem;
     public double m_height;
-    public SetArmPosCommand(double height, ArmSubsystem ArmSubsystem) {
+    public SetArmPosCommand(double m_height, ArmSubsystem ArmSubsystem) {
         this.arm_subsystem = ArmSubsystem;
         addRequirements(arm_subsystem);
-        m_height = height;
+        this.m_height = m_height;
     }
 
     // @Override
