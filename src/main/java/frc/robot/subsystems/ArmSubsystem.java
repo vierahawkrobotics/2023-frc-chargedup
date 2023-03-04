@@ -32,8 +32,8 @@ public class ArmSubsystem extends SubsystemBase {
 
         ShuffleboardTab tab = Shuffleboard.getTab("Arm Rotation");
         //tab.addNumber(getName(), null)
-        tab.addNumber("Motor Position:", () -> {return encoder.getPosition();});
-        tab.addNumber("Motor Height:", () -> {return ArmSubsystem.getRadiansToHeight(encoder.getPosition());});
+        tab.addNumber("Motor Position:", () -> {return getPosition();});
+        tab.addNumber("Motor Height (M):", () -> {return getHeightPosition();});
         //tab.addNumber("Length of Arm:", () -> {return tSubsystem.getRadiansToLength(encoder.getPosition());});
         tab.addNumber("Motor Input:", () -> {return motor.get();});
     }
@@ -44,7 +44,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @param target target in radians that the position of the arm should be in.
      */
     void setPID(double target) {
-        motor.set(pidController.calculate(encoder.getPosition(), target));
+        motor.set(pidController.calculate(getPosition(), target));
     }
 
     /***
@@ -66,7 +66,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
 
     static double getRadiansToHeight(double radians) {
-        return Constants.ArmALength - Math.cos(radians) * Constants.ArmBLength;
+        return Constants.armHeight - Math.cos(radians) * Constants.ArmALength;
     }
 
     /***
@@ -75,11 +75,15 @@ public class ArmSubsystem extends SubsystemBase {
      * @return Returns the position of the arm
      */
     public double getPosition() {
-        return encoder.getPosition();
+        double v= encoder.getPosition() * Math.PI * 2;
+        if (v > 0.8 * Math.PI * 2) {
+            return v - Math.PI * 2;
+        }
+        return v;
     }
 
     public double getHeightPosition() {
-        return getRadiansToHeight(encoder.getPosition());
+        return getRadiansToHeight(getPosition());
     }
 
     /***
@@ -88,7 +92,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @param height The height and the position of the arm(decimal)
      */
     void setTargetHeight(double height) {
-        motor.set(pidController.calculate(encoder.getPosition(), getHeightToRadians(height)));
+        motor.set(pidController.calculate(getPosition(), getHeightToRadians(height)));
     }
 
     /***
@@ -97,7 +101,11 @@ public class ArmSubsystem extends SubsystemBase {
      * @param radians Calculates the pidController, radians, and gets position
      */
     void setTargetRotation(double radians) {
-        motor.set(pidController.calculate(encoder.getPosition(), radians));
+        double v = pidController.calculate(getPosition(), radians);
+        if(v < 0.02 && v > -0.02) v = 0;
+        if(v > 0.2) v = 0.2;
+        if(v < -0.2) v = -0.2;
+        motor.set(v);
     }
 
     /***
@@ -133,7 +141,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
     
     public static void setTargetRadian(double v) {
-        targetRadian = Math.min(Math.max(v,0),135/180*Math.PI);
+        targetRadian = Math.min(Math.max(v,0),135.0/180.0*Math.PI);
     }
 
     public static double getTargetRadian() {
@@ -152,8 +160,8 @@ public class ArmSubsystem extends SubsystemBase {
     public void periodic() {
         // set to target rotation value
         //setTargetRotation(targetRadian);
-        System.out.println(encoder.getPosition());
-
+        //System.out.println(getPosition());
+        setTargetRotation(targetRadian);
     }
 
     @Override

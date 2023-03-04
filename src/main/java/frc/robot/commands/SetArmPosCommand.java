@@ -9,25 +9,26 @@ import frc.robot.subsystems.ArmSubsystem;
 //import frc.robot.Constants;
 //import frc.robot.Robot;
 //import frc.robot.RobotContainer;
+import java.util.function.Supplier;
 
 
 public class SetArmPosCommand extends CommandBase {
     public ArmSubsystem arm_subsystem;
-    public double m_height;
-    public SetArmPosCommand(double m_height, ArmSubsystem ArmSubsystem) {
+    public Supplier<Double> getRadians;
+    public SetArmPosCommand(Supplier<Double> getRadians, ArmSubsystem ArmSubsystem) {
         this.arm_subsystem = ArmSubsystem;
         addRequirements(arm_subsystem);
-        this.m_height = m_height;
+        this.getRadians = getRadians;
     }
 
-    // @Override
-    // public void initialize() {
-    //     arm_subsystem.targetRadian = ArmSubsystem.getHeightToRadians(m_height);
-    // }
+     @Override
+     public void initialize() {
+        arm_subsystem.setTargetRadianT(getRadians.get());
+        System.out.println(getRadians.get());
+    }
 
     @Override
     public void execute() {
-        arm_subsystem.setHeight(m_height);
     }
 
     @Override

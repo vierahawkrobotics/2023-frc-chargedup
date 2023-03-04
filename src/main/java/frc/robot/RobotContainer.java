@@ -7,21 +7,27 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.ClawStates;
 import frc.robot.commands.SetArmPosCommand;
+import frc.robot.commands.SetClawCommand;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
 
 //import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 
 public class RobotContainer {
   ArmSubsystem armSubsystem;
+  ClawSubsystem clawSubsystem;
   TelescopeSubsystem telescopeSubsystem;
 
 
   public RobotContainer() {
     armSubsystem = new ArmSubsystem();
+    clawSubsystem = new ClawSubsystem();
     //telescopeSubsystem = new TelescopeSubsystem();
     configureBindings();
   }
@@ -31,11 +37,15 @@ public class RobotContainer {
   private void configureBindings() {
     //tab.add("X", 0.9).getEntry();
     //tab.add("Y", 0.1).getEntry();
-    Joystick joystick = new Joystick(0);
-    new JoystickButton(joystick, 0).onTrue(new SetArmPosCommand(0.2, armSubsystem));
-    new JoystickButton(joystick, 1).onTrue(new SetArmPosCommand(Constants.lowGoalHeight, armSubsystem));
-    new JoystickButton(joystick, 2).onTrue(new SetArmPosCommand(Constants.middleGoalHeight, armSubsystem));
-    new JoystickButton(joystick, 3).onTrue(new SetArmPosCommand(Constants.highGoalHeight, armSubsystem));
+    XboxController joystick = new XboxController(0);
+    armSubsystem.setDefaultCommand(new SetArmPosCommand(() -> {return -joystick.getLeftY() * 2;}, armSubsystem));
+    //new Trigger(joystick.povUp(null))
+    new JoystickButton(joystick, 1).onTrue(new SetClawCommand(ClawStates.Open, clawSubsystem));
+    new JoystickButton(joystick, 2).onTrue(new SetClawCommand(ClawStates.Closed, clawSubsystem));
+    //new JoystickButton(joystick, 0).onTrue(new SetArmPosCommand(0.2, armSubsystem));
+    //new JoystickButton(joystick, 1).onTrue(new SetArmPosCommand(Constants.lowGoalHeight, armSubsystem));
+    //new JoystickButton(joystick, 2).onTrue(new SetArmPosCommand(Constants.middleGoalHeight, armSubsystem));
+    //new JoystickButton(joystick, 3).onTrue(new SetArmPosCommand(Constants.highGoalHeight, armSubsystem));
     
   }
 
