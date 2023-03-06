@@ -27,18 +27,18 @@ public class TelescopeSubsystem extends SubsystemBase {
         ShuffleboardTab tab = Shuffleboard.getTab("Telescope Arm");
         //tab.addNumber(getName(), null)
         tab.addNumber("Motor position:", () -> {return encoder.getPosition();});
-        tab.addNumber("Motor Height:", () -> {return ArmSubsystem.getRadiansToHeight(encoder.getPosition());});
-        tab.addNumber("Length of Arm:", () -> {return getRadiansToLength(encoder.getPosition());});
+        tab.addNumber("Motor Height:", () -> {return ArmSubsystem.getTotalHeightFromSecondaryArm(getRadiansToLength(getEncoderInRadians()));});
+        tab.addNumber("Length of Arm:", () -> {return getRadiansToLength(getEncoderInRadians());});
         tab.addNumber("Motor intput:", () -> {return motor.get();});
     
     }
 
     /** Using Radius, Convert Length To Radians (length/radius = radians) */
-    public double getLengthToRadians(double length){
+    static double getLengthToRadians(double length){
         return (length / Constants.ArmWinchRadius);
     }
     /** Convert Radians Back To Length (radians * radius = length) */
-    public double getRadiansToLength(double radians){
+    static double getRadiansToLength(double radians){
         return (radians * Constants.ArmWinchRadius);
     }
     /** Convert Encoder Position Into Radians (encoder_position * 2 * pi) */
@@ -50,14 +50,14 @@ public class TelescopeSubsystem extends SubsystemBase {
         return getRadiansToLength(getEncoderInRadians());
     }
     /** Using A PID, Calculate The Encoder Position And Create A Certain Setpoint */
-    public void setpid (double setpoint){
-        motor.set(pid.calculate(encoder.getPosition(), setpoint));
+    void setpid (double setpoint){
+        motor.set(pid.calculate(getEncoderInRadians(), setpoint));
     }
 
     double MaxLengthValue() {
-        if(ArmSubsystem.getTargetRadian() > 1.4) return 1;
+        if(ArmSubsystem.getTargetRadian() > 1.4) return Constants.ArmBLength;
 
-        return Math.min(Math.max(
+        return Constants.ArmBLength * Math.min(Math.max(
             ((Constants.clawLength+Constants.armHeight)/Math.cos(ArmSubsystem.getTargetRadian())-Constants.ArmALength)/Constants.ArmBLength
         ,0), 1);
     }

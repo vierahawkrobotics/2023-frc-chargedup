@@ -24,7 +24,7 @@ public class SetArmPosCommand extends CommandBase {
      @Override
      public void initialize() {
         arm_subsystem.setTargetRadianT(getRadians.get());
-        System.out.println(getRadians.get());
+        //System.out.println(getRadians.get());
     }
 
     @Override

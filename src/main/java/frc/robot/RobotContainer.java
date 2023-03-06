@@ -7,17 +7,16 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawStates;
-import frc.robot.commands.SetArmPosCommand;
-import frc.robot.commands.SetClawCommand;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.TelescopeSubsystem;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 //import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.event.EventLoop;
 
 public class RobotContainer {
   ArmSubsystem armSubsystem;
@@ -28,7 +27,7 @@ public class RobotContainer {
   public RobotContainer() {
     armSubsystem = new ArmSubsystem();
     clawSubsystem = new ClawSubsystem();
-    //telescopeSubsystem = new TelescopeSubsystem();
+    telescopeSubsystem = new TelescopeSubsystem();
     configureBindings();
   }
 //FYI: you can rebind the buttons on the back on the controller by holding down the middle back button, 
@@ -38,8 +37,9 @@ public class RobotContainer {
     //tab.add("X", 0.9).getEntry();
     //tab.add("Y", 0.1).getEntry();
     XboxController joystick = new XboxController(0);
-    armSubsystem.setDefaultCommand(new SetArmPosCommand(() -> {return -joystick.getLeftY() * 2;}, armSubsystem));
-    //new Trigger(joystick.povUp(null))
+    //armSubsystem.setDefaultCommand(new SetArmPosCommand(() -> {return -joystick.getLeftY() * 2;}, armSubsystem));
+    new Trigger(joystick.povUp(new EventLoop())).onTrue(new JoystickArmStateCommand(1, armSubsystem, telescopeSubsystem));
+    new Trigger(joystick.povDown(new EventLoop())).onTrue(new JoystickArmStateCommand(-1, armSubsystem, telescopeSubsystem));
     new JoystickButton(joystick, 1).onTrue(new SetClawCommand(ClawStates.Open, clawSubsystem));
     new JoystickButton(joystick, 2).onTrue(new SetClawCommand(ClawStates.Closed, clawSubsystem));
     //new JoystickButton(joystick, 0).onTrue(new SetArmPosCommand(0.2, armSubsystem));

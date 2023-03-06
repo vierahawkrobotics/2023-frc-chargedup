@@ -36,6 +36,7 @@ public class ArmSubsystem extends SubsystemBase {
         tab.addNumber("Motor Height (M):", () -> {return getHeightPosition();});
         //tab.addNumber("Length of Arm:", () -> {return tSubsystem.getRadiansToLength(encoder.getPosition());});
         tab.addNumber("Motor Input:", () -> {return motor.get();});
+        tab.addNumber("Motor RPM:", () -> {return motor.getEncoder().getVelocity();});
     }
 
     /**
@@ -67,6 +68,17 @@ public class ArmSubsystem extends SubsystemBase {
 
     static double getRadiansToHeight(double radians) {
         return Constants.armHeight - Math.cos(radians) * Constants.ArmALength;
+    }
+
+    /***
+     * The arms radians to height
+     * 
+     * @param radians The radians of the arm
+     * @return Returns the arm A length - radians * arm B length
+     */
+
+     static double getTotalHeightFromSecondaryArm(double armBlength) {
+        return Constants.armHeight - Math.cos(targetRadian) * (Constants.ArmALength+armBlength);
     }
 
     /***
@@ -103,8 +115,8 @@ public class ArmSubsystem extends SubsystemBase {
     void setTargetRotation(double radians) {
         double v = pidController.calculate(getPosition(), radians);
         if(v < 0.02 && v > -0.02) v = 0;
-        if(v > 0.2) v = 0.2;
-        if(v < -0.2) v = -0.2;
+        if(v > 0.8) v = 0.8;
+        if(v < -0.8) v = -0.8;
         motor.set(v);
     }
 
@@ -114,20 +126,20 @@ public class ArmSubsystem extends SubsystemBase {
      * @param mState The new state to use in the arm
      */
 
-    public void setHeight(Constants.ArmStates mState) {
+    public void setRadian(Constants.ArmStates mState) {
         double target = 0;
         switch (mState) {
             case Low:
-                target = getHeightToRadians(Constants.lowGoalHeight);
+                target = Constants.lowGoalRadian;
                 break;
             case Middle:
-                target = getHeightToRadians(Constants.middleGoalHeight);
+                target = Constants.middleGoalRadian;
                 break;
             case High:
-                target = getHeightToRadians(Constants.highGoalHeight);
+                target = Constants.highGoalRadian;
                 break;
             case Ground:
-                target = getHeightToRadians(Constants.groundGoalHeight);
+                target = Constants.groundGoalRadian;
                 break;
             default:
                 break;
