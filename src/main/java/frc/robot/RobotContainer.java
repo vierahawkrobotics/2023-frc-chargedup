@@ -30,6 +30,7 @@ import java.util.List;
 
 
 //import java.util.function.Supplier;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.EventLoop;
 
 public class RobotContainer {
@@ -53,10 +54,12 @@ public class RobotContainer {
     //tab.add("Y", 0.1).getEntry();
     XboxController joystick = new XboxController(0);
     //armSubsystem.setDefaultCommand(new SetArmPosCommand(() -> {return -joystick.getLeftY() * 2;}, armSubsystem));
+    armSubsystem.setDefaultCommand(new SetArmToPoint(() -> {return joystick.getLeftX() * 2;},() -> {return -joystick.getLeftY() * 2 + Constants.armHeight;},telescopeSubsystem, armSubsystem));
     new Trigger(joystick.povUp(new EventLoop())).onTrue(new JoystickArmStateCommand(1, armSubsystem, telescopeSubsystem));
     new Trigger(joystick.povDown(new EventLoop())).onTrue(new JoystickArmStateCommand(-1, armSubsystem, telescopeSubsystem));
     new JoystickButton(joystick, 1).onTrue(new SetClawCommand(ClawStates.Open, clawSubsystem));
     new JoystickButton(joystick, 2).onTrue(new SetClawCommand(ClawStates.Closed, clawSubsystem));
+    new JoystickButton(joystick, 1).onTrue(new SetClawCommand(ClawStates.Toggle, clawSubsystem));
     //new JoystickButton(joystick, 0).onTrue(new SetArmPosCommand(0.2, armSubsystem));
     //new JoystickButton(joystick, 1).onTrue(new SetArmPosCommand(Constants.lowGoalHeight, armSubsystem));
     //new JoystickButton(joystick, 2).onTrue(new SetArmPosCommand(Constants.middleGoalHeight, armSubsystem));

@@ -72,7 +72,7 @@ public class JoystickArmStateCommand extends CommandBase {
         }
         
         arm.setRadian(currentState);
-        telescope.setLength(currentState);
+        //telescope.setLength(currentState);
     }
 
     @Override

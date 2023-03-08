@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
@@ -16,19 +18,28 @@ public class SetArmToPoint extends CommandBase {
         addRequirements(tele);
         addRequirements(arm);
         this.x = x;
-        this.y = y;
+        this.y = y - Constants.armHeight;
+    }
+
+    public SetArmToPoint(Supplier<Double> x, Supplier<Double> y, TelescopeSubsystem tele, ArmSubsystem arm) {
+        this.tele = tele;
+        this.arm = arm;
+        addRequirements(tele);
+        addRequirements(arm);
+        this.x = x.get();
+        this.y = y.get();
     }
 
     @Override
     public void initialize() {
         tele.setLength((Math.sqrt(x*x+y*y)-Constants.ArmALength));
-        arm.setTargetRadianT(Math.PI-Math.atan2(y, x));
+        if(x != 0 || y != 0) {
+            arm.setTargetRadianT(Math.PI-Math.atan2(y, x));
+        }
     }
 
     @Override
     public void execute() {
-        tele.setLength((Math.sqrt(x*x+y*y)-Constants.ArmALength));
-        arm.setTargetRadianT(Math.PI-Math.atan2(y, x));
     }
 
     @Override

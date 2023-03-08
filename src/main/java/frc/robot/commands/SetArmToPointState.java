@@ -41,8 +41,7 @@ public class SetArmToPointState extends CommandBase {
 
     @Override
     public void execute() {
-        tele.setLength((Math.sqrt(x*x+y*y)-Constants.ArmALength));
-        arm.setTargetRadianT(Math.PI-Math.atan2(y, x));
+        
     }
 
     @Override

@@ -9,18 +9,18 @@ import edu.wpi.first.math.util.Units;
 
 public class Constants {
     //Rotational arm constants
-    public final static double ArmP = 1.3;
+    public final static double ArmP = 1;
     public final static double ArmI = 0.00;
     public final static double ArmD = 0.0000;
     public final static int armMotorID = 9;
     public final static double ArmALength = 0.6477;
     //Telescope constants
-    public final static double ArmWinchRadius = 0.5;
+    public final static double ArmWinchRadius = 0.00168392593; //radius of gear 4.5466cm / gear ration 27
     public final static double ScopeP = 0.2;
     public final static double ScopeI = 0;
     public final static double ScopeD = 0;
     public final static int scopeMotorID = 10;
-    public final static double ArmBLength = 0.4572;
+    public final static double ArmBLength = 0.4572; 
     //States
     public final static double lowGoalRadian = 0.1;
     public final static double middleGoalRadian = 0.87;
