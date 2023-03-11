@@ -22,6 +22,7 @@ public class Constants {
     public final static int scopeMotorID = 10;
     public final static double ArmBLength = 0.432; 
     //States
+    public final static double ArmLength = ArmALength + ArmBLength;
     public final static double lowGoalRadian = 0.2;
     public final static double middleGoalRadian = 1.67;
     public final static double highGoalRadian = 1.89;

@@ -56,7 +56,7 @@ public class RobotContainer {
     XboxController joystickArm = new XboxController(1);
     XboxController joystick = new XboxController(0);
     //armSubsystem.setDefaultCommand(new SetArmPosCommand(() -> {return -joystick.getLeftY() * 2;}, armSubsystem));
-    //armSubsystem.setDefaultCommand(new SetArmToPoint(() -> {return joystick.getLeftX() * 2;},() -> {return -joystick.getLeftY() * 2 + Constants.armHeight;},telescopeSubsystem, armSubsystem));
+    armSubsystem.setDefaultCommand(new SetArmToPoint(() -> {return joystick.getLeftX() * Constants.ArmLength;},() -> {return -joystick.getLeftY()* Constants.ArmLength + Constants.armHeight;},telescopeSubsystem, armSubsystem));
     new Trigger(joystickArm.povUp(new EventLoop())).onTrue(new JoystickArmStateCommand(1, armSubsystem, telescopeSubsystem));
     new Trigger(joystickArm.povDown(new EventLoop())).onTrue(new JoystickArmStateCommand(-1, armSubsystem, telescopeSubsystem));
     new JoystickButton(joystickArm, 1).onTrue(new SetClawCommand(ClawStates.Toggle, clawSubsystem));

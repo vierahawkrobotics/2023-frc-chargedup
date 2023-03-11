@@ -32,10 +32,14 @@ public class SetArmToPoint extends CommandBase {
 
     @Override
     public void initialize() {
-        tele.setLength((Math.sqrt(x*x+y*y)-Constants.ArmALength));
-        if(x != 0 || y != 0) {
+        if(inRange(x,0.1) && inRange(y,0.1)) {
             arm.setTargetRadianT(Math.PI-Math.atan2(y, x));
+            tele.setLength((Math.sqrt(x*x+y*y)-Constants.ArmALength));
         }
+    }
+
+    boolean inRange(double value, double range) {
+        return value > -range && value < range;
     }
 
     @Override
