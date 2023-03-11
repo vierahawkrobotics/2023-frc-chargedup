@@ -29,7 +29,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     public ArmSubsystem() {
         setName("name");
-
         ShuffleboardTab tab = Shuffleboard.getTab("Arm Rotation");
         //tab.addNumber(getName(), null)
         tab.addNumber("Motor Position:", () -> {return getPosition();});

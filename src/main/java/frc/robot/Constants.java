@@ -15,18 +15,18 @@ public class Constants {
     public final static int armMotorID = 9;
     public final static double ArmALength = 0.6477;
     //Telescope constants
-    public final static double ArmWinchRadius = 0.00118443982; //radius of gear 4.5466cm / gear ration 27
+    public final static double ArmWinchRadius = 0.00118443982 * 1.11111111111 *1.21348314607; //radius of gear 4.5466cm / gear ration 27
     public final static double ScopeP = 1.4;
     public final static double ScopeI = 0;
     public final static double ScopeD = 0;
     public final static int scopeMotorID = 10;
-    public final static double ArmBLength = 0.48; 
+    public final static double ArmBLength = 0.432; 
     //States
     public final static double lowGoalRadian = 0.2;
     public final static double middleGoalRadian = 1.67;
     public final static double highGoalRadian = 1.89;
     public final static double groundGoalRadian = 0;
-    public final static double lowGoalTeleLength = 0.26 * ArmBLength;
+    public final static double lowGoalTeleLength = 0.22 * ArmBLength;
     public final static double middleGoalTeleLength = .95 * ArmBLength;
     public final static double highGoalTeleLength = .95 * ArmBLength;
     public final static double groundGoalTeleLength = 0 * ArmBLength;

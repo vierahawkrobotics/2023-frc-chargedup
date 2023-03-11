@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.TelescopeSubsystem;
 
 public class Robot extends TimedRobot {
 
@@ -25,13 +27,18 @@ private Command m_autonomousCommand;
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+
+  }
 
   @Override
   public void disabledPeriodic() {}
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+    m_robotContainer.armSubsystem.setRadian(Constants.ArmStates.Ground);
+    m_robotContainer.telescopeSubsystem.setLength(Constants.ArmStates.Ground);
+  }
 
   @Override
   public void autonomousInit() {

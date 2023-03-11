@@ -33,7 +33,6 @@ public class TelescopeSubsystem extends SubsystemBase {
         tab.addNumber("Motor Height:", () -> {return ArmSubsystem.getTotalHeightFromSecondaryArm(getRadiansToLength(getEncoderInRadians()));});
         tab.addNumber("Length of Arm:", () -> {return getRadiansToLength(getEncoderInRadians());});
         tab.addNumber("Motor intput:", () -> {return motor.get();});
-    
     }
 
     /** Using Radius, Convert Length To Radians (length/radius = radians) */
@@ -56,8 +55,8 @@ public class TelescopeSubsystem extends SubsystemBase {
     void setpid (double setpoint){
         setpoint = pid.calculate(getCurrentArmLength(), setpoint);
         if(setpoint < 0.03 && setpoint > -0.03) setpoint = 0;
-        if(setpoint > 0.2) setpoint = 0.2;
-        if(setpoint < -0.2) setpoint = -0.2;
+        if(setpoint > 0.3) setpoint = 0.3;
+        if(setpoint < -0.3) setpoint = -0.3;
         motor.set(setpoint);
     }
 

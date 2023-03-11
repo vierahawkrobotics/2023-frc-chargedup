@@ -31,6 +31,7 @@ public class SetArmToPointState extends CommandBase {
                 y =0;
                 break;
         }
+        y-=Constants.armHeight;
     }
 
     @Override
