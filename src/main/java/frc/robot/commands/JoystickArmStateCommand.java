@@ -13,7 +13,7 @@ public class JoystickArmStateCommand extends CommandBase {
     public TelescopeSubsystem telescope;
     public int state;
 
-    static Constants.ArmStates currentState = Constants.ArmStates.Low;
+    static Constants.ArmStates currentState = Constants.ArmStates.Ground;
 
     public JoystickArmStateCommand(int state, ArmSubsystem arm, TelescopeSubsystem telescope ) {
         this.arm = arm;
@@ -72,7 +72,7 @@ public class JoystickArmStateCommand extends CommandBase {
         }
         
         arm.setRadian(currentState);
-        //telescope.setLength(currentState);
+        telescope.setLength(currentState);
     }
 
     @Override

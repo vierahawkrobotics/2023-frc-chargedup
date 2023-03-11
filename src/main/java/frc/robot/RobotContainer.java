@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawStates;
@@ -52,18 +53,13 @@ public class RobotContainer {
   private void configureBindings() {
     //tab.add("X", 0.9).getEntry();
     //tab.add("Y", 0.1).getEntry();
+    XboxController joystickArm = new XboxController(1);
     XboxController joystick = new XboxController(0);
     //armSubsystem.setDefaultCommand(new SetArmPosCommand(() -> {return -joystick.getLeftY() * 2;}, armSubsystem));
-    armSubsystem.setDefaultCommand(new SetArmToPoint(() -> {return joystick.getLeftX() * 2;},() -> {return -joystick.getLeftY() * 2 + Constants.armHeight;},telescopeSubsystem, armSubsystem));
-    new Trigger(joystick.povUp(new EventLoop())).onTrue(new JoystickArmStateCommand(1, armSubsystem, telescopeSubsystem));
-    new Trigger(joystick.povDown(new EventLoop())).onTrue(new JoystickArmStateCommand(-1, armSubsystem, telescopeSubsystem));
-    new JoystickButton(joystick, 1).onTrue(new SetClawCommand(ClawStates.Open, clawSubsystem));
-    new JoystickButton(joystick, 2).onTrue(new SetClawCommand(ClawStates.Closed, clawSubsystem));
-    new JoystickButton(joystick, 1).onTrue(new SetClawCommand(ClawStates.Toggle, clawSubsystem));
-    //new JoystickButton(joystick, 0).onTrue(new SetArmPosCommand(0.2, armSubsystem));
-    //new JoystickButton(joystick, 1).onTrue(new SetArmPosCommand(Constants.lowGoalHeight, armSubsystem));
-    //new JoystickButton(joystick, 2).onTrue(new SetArmPosCommand(Constants.middleGoalHeight, armSubsystem));
-    //new JoystickButton(joystick, 3).onTrue(new SetArmPosCommand(Constants.highGoalHeight, armSubsystem));
+    //armSubsystem.setDefaultCommand(new SetArmToPoint(() -> {return joystick.getLeftX() * 2;},() -> {return -joystick.getLeftY() * 2 + Constants.armHeight;},telescopeSubsystem, armSubsystem));
+    new Trigger(joystickArm.povUp(new EventLoop())).onTrue(new JoystickArmStateCommand(1, armSubsystem, telescopeSubsystem));
+    new Trigger(joystickArm.povDown(new EventLoop())).onTrue(new JoystickArmStateCommand(-1, armSubsystem, telescopeSubsystem));
+    new JoystickButton(joystickArm, 1).onTrue(new SetClawCommand(ClawStates.Toggle, clawSubsystem));
     
     new JoystickButton(joystick, Button.kR1.value)
         .whileTrue(new RunCommand(
@@ -78,8 +74,8 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
+                MathUtil.applyDeadband(joystick.getLeftX(), 0.06),
                 MathUtil.applyDeadband(-joystick.getLeftY(), 0.06),
-                MathUtil.applyDeadband(-joystick.getLeftX(), 0.06),
                 MathUtil.applyDeadband(-joystick.getRightX(), 0.06),
                 true),
             m_robotDrive));

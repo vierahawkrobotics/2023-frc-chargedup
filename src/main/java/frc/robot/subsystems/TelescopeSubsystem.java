@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -22,11 +23,13 @@ public class TelescopeSubsystem extends SubsystemBase {
     static double targetLength = 0;
 
     public TelescopeSubsystem() {
+        motor.setIdleMode(IdleMode.kBrake);
         setName("name");
         encoder.setPosition(0);
         ShuffleboardTab tab = Shuffleboard.getTab("Telescope Arm");
         //tab.addNumber(getName(), null)
         tab.addNumber("Motor position:", () -> {return encoder.getPosition();});
+        tab.addNumber("Motor target:", () -> {return targetLength;});
         tab.addNumber("Motor Height:", () -> {return ArmSubsystem.getTotalHeightFromSecondaryArm(getRadiansToLength(getEncoderInRadians()));});
         tab.addNumber("Length of Arm:", () -> {return getRadiansToLength(getEncoderInRadians());});
         tab.addNumber("Motor intput:", () -> {return motor.get();});
@@ -51,7 +54,11 @@ public class TelescopeSubsystem extends SubsystemBase {
     }
     /** Using A PID, Calculate The Encoder Position And Create A Certain Setpoint */
     void setpid (double setpoint){
-        motor.set(pid.calculate(getEncoderInRadians(), setpoint));
+        setpoint = pid.calculate(getCurrentArmLength(), setpoint);
+        if(setpoint < 0.03 && setpoint > -0.03) setpoint = 0;
+        if(setpoint > 0.2) setpoint = 0.2;
+        if(setpoint < -0.2) setpoint = -0.2;
+        motor.set(setpoint);
     }
 
     double MaxLengthValue() {
@@ -70,16 +77,16 @@ public class TelescopeSubsystem extends SubsystemBase {
         double target = 0;
         switch (mState) {
             case Low:
-                target = getLengthToRadians(Constants.lowGoalTeleLength);
+                target = (Constants.lowGoalTeleLength);
                 break;
             case Middle:
-                target = getLengthToRadians(Constants.middleGoalTeleLength);
+                target = (Constants.middleGoalTeleLength);
                 break;
             case High:
-                target = getLengthToRadians(Constants.highGoalTeleLength);
+                target = (Constants.highGoalTeleLength);
                 break;
             case Ground:
-                target = getLengthToRadians(Constants.groundGoalTeleLength);
+                target = (Constants.groundGoalTeleLength);
                 break;
             default:
                 break;
@@ -93,7 +100,7 @@ public class TelescopeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        setpid(getLengthToRadians(targetLength));
+        setpid(targetLength);
     }
 
     @Override

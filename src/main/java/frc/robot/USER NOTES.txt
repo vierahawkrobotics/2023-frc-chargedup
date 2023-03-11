@@ -18,3 +18,8 @@ at 6:25 the build was successful.
 BE CAREFUL WITH THE TELESCOPE STUFF, COULD BREAK SOMETHING
 
 please either stop testing or review code one function at a time if something wrong happens.
+
+
+I am currently leaving, and I accedently merged the drive code with the testing code, so there might be something wrong.
+ I commented out all of the drive code in RobotContainer, but i dont know if there is other code from drive stuff
+ that needs to be removed.

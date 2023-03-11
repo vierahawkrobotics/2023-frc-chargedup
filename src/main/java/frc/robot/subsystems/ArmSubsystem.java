@@ -114,7 +114,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
     void setTargetRotation(double radians) {
         double v = pidController.calculate(getPosition(), radians);
-        if(v < 0.02 && v > -0.02) v = 0;
+        if(v < 0.01 && v > -0.01) v = 0;
         if(v > 0.8) v = 0.8;
         if(v < -0.8) v = -0.8;
         motor.set(v);
