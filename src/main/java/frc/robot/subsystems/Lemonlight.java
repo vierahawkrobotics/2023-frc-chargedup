@@ -13,6 +13,7 @@ public class Lemonlight{
     NetworkTableEntry tx;
     NetworkTableEntry ty;
     NetworkTableEntry ta;
+    NetworkTableEntry tid;
     DoubleArraySubscriber posesub;
     NetworkTable table;
 
@@ -25,6 +26,7 @@ public class Lemonlight{
         this.tx = table.getEntry("tx");
         this.ty = table.getEntry("ty");
         this.ta = table.getEntry("ta");
+        this.tid = table.getEntry("tid");
         this.posesub = table.getDoubleArrayTopic("botpose").subscribe(new double[] {});
     }
 
@@ -46,7 +48,10 @@ public class Lemonlight{
         return p3d;
     }
 
-    
+    public double getAprilTagID(){
+        double id = tid.getDouble(-1);
+        return id;
+    }
 
     public void lemonLightPeriodic(){
         double x = tx.getDouble(0.0);
@@ -67,9 +72,11 @@ public class Lemonlight{
 
 
         // double area = ta.getDouble(0.0);
-        System.out.println("LimelightX: "+ x);
-        System.out.println("LimelightY: "+ y);
+        // System.out.println("LimelightX: "+ x);
+        // System.out.println("LimelightY: "+ y);
         // SmartDashboard.putNumber("LimelightArea", area);
+
+        System.out.println(getAprilTagID());
     }   
 
     public void initTheLemon() {
