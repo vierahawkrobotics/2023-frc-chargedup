@@ -16,9 +16,9 @@ public class TelescopeSubsystem extends SubsystemBase {
    
     
     /** Create Variables: Motor, Encoder, PID */
-    final CANSparkMax motor = new CANSparkMax(Constants.scopeMotorID, MotorType.kBrushless);
+    final CANSparkMax motor = new CANSparkMax(Constants.TelescopeArmConstants.scopeMotorID, MotorType.kBrushless);
     final RelativeEncoder encoder = motor.getEncoder();
-    final PIDController pid = new PIDController(Constants.ScopeP,Constants.ScopeI,Constants.ScopeD);
+    final PIDController pid = new PIDController(Constants.TelescopeArmConstants.ScopeP, Constants.TelescopeArmConstants.ScopeI, Constants.TelescopeArmConstants.ScopeD);
     
     static double targetLength = 0;
 
@@ -37,11 +37,11 @@ public class TelescopeSubsystem extends SubsystemBase {
 
     /** Using Radius, Convert Length To Radians (length/radius = radians) */
     static double getLengthToRadians(double length){
-        return (length / Constants.ArmWinchRadius);
+        return (length / Constants.TelescopeArmConstants.ArmWinchRadius);
     }
     /** Convert Radians Back To Length (radians * radius = length) */
     static double getRadiansToLength(double radians){
-        return (radians * Constants.ArmWinchRadius);
+        return (radians * Constants.TelescopeArmConstants.ArmWinchRadius);
     }
     /** Convert Encoder Position Into Radians (encoder_position * 2 * pi) */
     public double getEncoderInRadians() {
@@ -54,17 +54,17 @@ public class TelescopeSubsystem extends SubsystemBase {
     /** Using A PID, Calculate The Encoder Position And Create A Certain Setpoint */
     void setpid (double setpoint){
         setpoint = pid.calculate(getCurrentArmLength(), setpoint);
-        if(setpoint < 0.03 && setpoint > -0.03) setpoint = 0;
+        if(setpoint < 0.01 && setpoint > -0.01) setpoint = 0;
         if(setpoint > 0.3) setpoint = 0.3;
         if(setpoint < -0.3) setpoint = -0.3;
         motor.set(setpoint);
     }
 
     double MaxLengthValue() {
-        if(ArmSubsystem.getTargetRadian() > 1.4) return Constants.ArmBLength;
+        if(ArmSubsystem.getTargetRadian() > 1.4) return Constants.TelescopeArmConstants.ArmBLength;
 
-        return Constants.ArmBLength * Math.min(Math.max(
-            ((Constants.clawLength+Constants.armHeight)/Math.cos(ArmSubsystem.getTargetRadian())-Constants.ArmALength)/Constants.ArmBLength
+        return Constants.TelescopeArmConstants.ArmBLength * Math.min(Math.max(
+            ((Constants.clawLength+Constants.armHeight)/Math.cos(ArmSubsystem.getTargetRadian())-Constants.RotationArmConstants.ArmALength)/Constants.TelescopeArmConstants.ArmBLength
         ,0), 1);
     }
 
@@ -76,19 +76,19 @@ public class TelescopeSubsystem extends SubsystemBase {
         double target = 0;
         switch (mState) {
             case Low:
-                target = (Constants.lowGoalTeleLength);
+                target = (Constants.TelescopeArmConstants.lowGoalTeleLength);
                 break;
             case Middle:
-                target = (Constants.middleGoalTeleLength);
+                target = (Constants.TelescopeArmConstants.middleGoalTeleLength);
                 break;
             case High:
-                target = (Constants.highGoalTeleLength);
+                target = (Constants.TelescopeArmConstants.highGoalTeleLength);
                 break;
             case Ground:
-                target = (Constants.groundGoalTeleLength);
+                target = (Constants.TelescopeArmConstants.groundGoalTeleLength);
                 break;
-            default:
-                break;
+            case Collect:
+                target = (Constants.TelescopeArmConstants.collectGoalTeleLength);
         }
         targetLength = target;
     }

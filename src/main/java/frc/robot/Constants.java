@@ -7,58 +7,69 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
-public class Constants {
-    //Rotational arm constants
-    public final static double ArmP = 1.2;
-    public final static double ArmI = 0.00;
-    public final static double ArmD = 0.0000;
-    public final static int armMotorID = 9;
-    public final static double ArmALength = 0.6477;
-    //Telescope constants
-    public final static double ArmWinchRadius = 0.00118443982 * 1.11111111111 *1.21348314607; //radius of gear 4.5466cm / gear ration 27
-    public final static double ScopeP = 1.4;
-    public final static double ScopeI = 0;
-    public final static double ScopeD = 0;
-    public final static int scopeMotorID = 10;
-    public final static double ArmBLength = 0.432; 
-    //States
-    public final static double lowGoalRadian = 0.2;
-    public final static double middleGoalRadian = 1.67;
-    public final static double highGoalRadian = 1.89;
-    public final static double groundGoalRadian = 0;
-    public final static double lowGoalTeleLength = 0.22 * ArmBLength;
-    public final static double middleGoalTeleLength = .95 * ArmBLength;
-    public final static double highGoalTeleLength = .95 * ArmBLength;
-    public final static double groundGoalTeleLength = 0 * ArmBLength;
 
+
+public class Constants {
+   
     public final static double midHeight = .87;
     public final static double highHeight = 1.17;
-
+    
     public enum ArmStates{
         Ground,
+        Collect,
         Low,
         Middle,
         High;
-    }
-    public enum ClawStates {
+      }
+      public enum ClawStates {
         Open,
         Closed,
         Toggle;
-    }
+      }
+      
+      public final static double clawLength = 0.305;
+      public final static double armHeight = 1.05;
 
-    public final static double clawLength = 0.305;
-    public final static double armHeight = 1.05;
+      public static final class TelescopeArmConstants{
+        public final static double ScopeP = 1.7;
+        public final static double ScopeI = 0.35;
+        public final static double ScopeD = 0;
 
-    public static final class DriveConstants {
+        public final static int scopeMotorID = 10;
+        public final static double ArmBLength = 0.45; 
+        public final static double ArmWinchRadius = 0.00118443982 * 1.11111111111 *1.21348314607; //radius of gear 4.5466cm / gear ration 27
+
+        public final static double groundGoalTeleLength = 0 * ArmBLength;
+        public final static double lowGoalTeleLength = 0 * ArmBLength;
+        public final static double collectGoalTeleLength = Units.inchesToMeters(7);
+        public final static double middleGoalTeleLength = .60 * ArmBLength;
+        public final static double highGoalTeleLength = 1 * ArmBLength;
+      }
+      
+      public static final class RotationArmConstants{
+        public final static double ArmP = 1.0;
+        public final static double ArmI = 0.00;
+        public final static double ArmD = 0.05;
+
+        public final static int armMotorID = 9;
+        public final static double ArmALength = 0.6477;
+
+        public final static double lowGoalRadian = 0.5;
+        public final static double middleGoalRadian = 1.58;
+        public final static double highGoalRadian = 1.95;
+        public final static double groundGoalRadian = 0;
+      }
+
+      public static final class DriveConstants {
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
-        public static final double kMaxSpeedMetersPerSecond = 4;
+        public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAngularSpeed = 2*Math.PI; // radians per second
-    
+        
         // Chassis configuration
-        public static final double kTrackWidth = Units.inchesToMeters(21.625);
-        // Distance between centers of right and left wheels on robot
-        public static final double kWheelBase = Units.inchesToMeters(21.625);
+      public static final double kTrackWidth = Units.inchesToMeters(21.625);
+      // Distance between centers of right and left wheels on robot
+      public static final double kWheelBase = Units.inchesToMeters(21.625);
         // Distance between front and back wheels on robot
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -117,7 +128,7 @@ public class Constants {
         public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
     
         public static final double kDrivingP = 0.04;
-        public static final double kDrivingI = 0;
+        public static final double kDrivingI = 0.0001;
         public static final double kDrivingD = 0;
         public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
         public static final double kDrivingMinOutput = -1;
@@ -142,7 +153,7 @@ public class Constants {
       }
     
       public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxSpeedMetersPerSecond = 4;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;

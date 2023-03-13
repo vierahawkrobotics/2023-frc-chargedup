@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 
 
+import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.Constants;
@@ -34,8 +35,11 @@ public class JoystickArmStateCommand extends CommandBase {
             case Low:
                 currentState = Constants.ArmStates.Middle;
                 return;
-            case Ground:
+            case Collect:
                 currentState = Constants.ArmStates.Low;
+                return;
+            case Ground:
+                currentState = Constants.ArmStates.Collect;
                 return;
         }      
     }
@@ -44,11 +48,14 @@ public class JoystickArmStateCommand extends CommandBase {
         switch(currentState) {
             case Ground:
                 return;
-            case Middle:
-                currentState = Constants.ArmStates.Low;
+            case Collect:
+                currentState = Constants.ArmStates.Ground;
                 return;
             case Low:
-                currentState = Constants.ArmStates.Ground;
+                currentState = Constants.ArmStates.Collect;
+                return;
+            case Middle:
+                currentState = Constants.ArmStates.Low;
                 return;
             case High:
                 currentState = Constants.ArmStates.Middle;

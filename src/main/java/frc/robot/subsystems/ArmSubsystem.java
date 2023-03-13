@@ -17,7 +17,7 @@ public class ArmSubsystem extends SubsystemBase {
     /***
      * Defines the CANS spark max motor, and the motor type
      */
-    final static CANSparkMax motor = new CANSparkMax(Constants.armMotorID, MotorType.kBrushless);
+    final static CANSparkMax motor = new CANSparkMax(Constants.RotationArmConstants.armMotorID, MotorType.kBrushless);
     /***
      * Defines the spark max encoder, and gets the absolute encoder
      */
@@ -25,7 +25,7 @@ public class ArmSubsystem extends SubsystemBase {
     /***
      * Defines the PID controller in variables ArmP, ArmI, ArmD
      */
-    final PIDController pidController = new PIDController(Constants.ArmP, Constants.ArmI, Constants.ArmD);
+    final PIDController pidController = new PIDController(Constants.RotationArmConstants.ArmP, Constants.RotationArmConstants.ArmI, Constants.RotationArmConstants.ArmD);
 
     public ArmSubsystem() {
         setName("name");
@@ -55,7 +55,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
 
     static double getHeightToRadians(double height) {
-        return Math.acos((height - Constants.ArmALength) / Constants.ArmBLength);
+        return Math.acos((height - Constants.RotationArmConstants.ArmALength) / Constants.TelescopeArmConstants.ArmBLength);
     }
 
     /***
@@ -66,7 +66,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
 
     static double getRadiansToHeight(double radians) {
-        return Constants.armHeight - Math.cos(radians) * Constants.ArmALength;
+        return Constants.armHeight - Math.cos(radians) * Constants.RotationArmConstants.ArmALength;
     }
 
     /***
@@ -77,7 +77,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
 
      static double getTotalHeightFromSecondaryArm(double armBlength) {
-        return Constants.armHeight - Math.cos(targetRadian) * (Constants.ArmALength+armBlength);
+        return Constants.armHeight - Math.cos(targetRadian) * (Constants.RotationArmConstants.ArmALength+armBlength);
     }
 
     /***
@@ -129,16 +129,18 @@ public class ArmSubsystem extends SubsystemBase {
         double target = 0;
         switch (mState) {
             case Low:
-                target = Constants.lowGoalRadian;
+                target = Constants.RotationArmConstants.lowGoalRadian;
                 break;
             case Middle:
-                target = Constants.middleGoalRadian;
+                target = Constants.RotationArmConstants.middleGoalRadian;
                 break;
             case High:
-                target = Constants.highGoalRadian;
+                target = Constants.RotationArmConstants.highGoalRadian;
                 break;
+            case Collect:
+                target = Constants.RotationArmConstants.lowGoalRadian;
             case Ground:
-                target = Constants.groundGoalRadian;
+                target = Constants.RotationArmConstants.groundGoalRadian;
                 break;
             default:
                 break;

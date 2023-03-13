@@ -11,11 +11,16 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
+
+import java.security.spec.MGF1ParameterSpec;
 
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
@@ -40,7 +45,9 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+  public final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+
+  Lemonlight lemon = new Lemonlight();
 
 
   // Odometry class for tracking robot pose
@@ -58,18 +65,40 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
   }
 
+
+  long lastTime = System.currentTimeMillis();
+  double lastAngle = 0;
+  
+  double angSpeed = 0;
+  
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        Rotation2d.fromDegrees(-m_gyro.getAngle()),
-        new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
+      Rotation2d.fromDegrees(-m_gyro.getAngle()),
+      new SwerveModulePosition[] {
+        m_frontLeft.getPosition(),
+        m_frontRight.getPosition(),
+        m_rearLeft.getPosition(),
             m_rearRight.getPosition()
-        });
-  }
+          });
+          
+          updateSB();
+          
+          long currTime = System.currentTimeMillis();
+
+          double tv = (double)(currTime - lastTime);
+          tv/=1000;
+          
+          
+          angSpeed = (m_gyro.getAngle() - lastAngle)/tv;
+          
+        lastTime = System.currentTimeMillis();
+        lastAngle = m_gyro.getAngle();
+        
+    // lemon.lemonLightPeriodic();
+          
+        }
 
   /**
    * Returns the currently-estimated pose of the robot.
@@ -123,8 +152,21 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
 
-    System.out.println(this.getHeading());
+    // System.out.println(this.getHeading());
+
+    targSpeed = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+    currentSpeed = m_frontLeft.m_drivingEncoder.getVelocity();
+
+    targetRot = Units.radiansToDegrees(rot);
+    currentRot = m_gyro.getRate();
+
   }
+
+  double targSpeed = 0;
+  double currentSpeed = 0;
+  
+  double currentRot = 0;
+  double targetRot = 0;
 
   /**
    * Sets the wheels into an X formation to prevent movement.
@@ -170,7 +212,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(-m_gyro.getYaw()).getDegrees();
+    return (-m_gyro.getAngle());
   }
 
   /**
@@ -180,5 +222,19 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+
+  private static final GenericEntry targetSpeedWidget= Shuffleboard.getTab("Drive").add("targetSpeed", 0).withPosition(0, 0).getEntry();
+  private static final GenericEntry currentSpeedWidget = Shuffleboard.getTab("Drive").add("currentSpeed",0).withSize(1, 1).getEntry();
+ 
+  private static final GenericEntry targetRotWidget= Shuffleboard.getTab("Drive").add("targetRot", 0).withPosition(2, 2).getEntry();
+  private static final GenericEntry currentRotWidget = Shuffleboard.getTab("Drive").add("currentRot",0).withSize(2, 1).getEntry();
+  private void updateSB() {
+    targetSpeedWidget.setDouble(targSpeed);
+    currentSpeedWidget.setDouble(currentSpeed);
+
+    targetRotWidget.setDouble(targetRot);
+    currentRotWidget.setDouble(angSpeed);
   }
 }

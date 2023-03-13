@@ -1,12 +1,20 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class Lemonlight{
     
@@ -27,36 +35,10 @@ public class Lemonlight{
         this.ty = table.getEntry("ty");
         this.ta = table.getEntry("ta");
         this.tid = table.getEntry("tid");
-        this.posesub = table.getDoubleArrayTopic("botpose").subscribe(new double[] {});
+        this.posesub = table.getDoubleArrayTopic("botpose").subscribe(new double[] {});   
     }
 
-    public Pose3d getRobotPose() {
-        double[] result = posesub.get();
-        tran3d = new Translation3d(result[0], result[1], result[2]);
-        r3d = new Rotation3d(result[3], result[4], result[5]);
-        p3d = new Pose3d(tran3d, r3d);
-        return p3d;
-    }
-
-    public Pose3d getposition() {
-        double[] temp = { 0, 0, 0 ,0,0,0};//default for getEntry
-        NetworkTableEntry value = table.getEntry("botpose");
-        double[] result = value.getDoubleArray(temp);
-        tran3d = new Translation3d(result[0], result[1], result[2]);
-        r3d = new Rotation3d(result[3], result[4], result[5]);
-        p3d = new Pose3d(tran3d, r3d);
-        return p3d;
-    }
-
-    public double getAprilTagID(){
-        double id = tid.getDouble(-1);
-        return id;
-    }
-
-    public void lemonLightPeriodic(){
-        double x = tx.getDouble(0.0);
-        double y = ty.getDouble(0.0);
-
+    public double[] getRobotPose() {
         double[] result = posesub.get();
 
         if(result.length > 0){
@@ -66,19 +48,21 @@ public class Lemonlight{
             System.out.println(p3d);
         }
 
-        // tran3d = new Translation3d(result[0], result[1], result[2]);
-        // r3d = new Rotation3d(result[3], result[4], result[5]);
-        // p3d = new Pose3d(tran3d, r3d);
+        return result;
+    }
 
+    public double getAprilTagID(){
+        double id = tid.getDouble(-1);
+        return id;
+    }
 
-        // double area = ta.getDouble(0.0);
-        // System.out.println("LimelightX: "+ x);
-        // System.out.println("LimelightY: "+ y);
-        // SmartDashboard.putNumber("LimelightArea", area);
-
-        System.out.println(getAprilTagID());
+    public void lemonLightPeriodic(){
+        double x = tx.getDouble(0.0);
+        double y = ty.getDouble(0.0);   
+        System.out.println(getRobotPose());
     }   
 
-    public void initTheLemon() {
-   }
+    public Pose2d getPose(){
+        return new Pose2d(new Translation2d(getRobotPose()[0], getRobotPose()[1]), new Rotation2d(getRobotPose()[2]));
+    }
 }
