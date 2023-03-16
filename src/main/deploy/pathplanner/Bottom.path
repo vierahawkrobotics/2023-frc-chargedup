@@ -1,0 +1,80 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 2.39,
+        "y": 0.910511516573385
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.3847851911160514,
+        "y": 0.910511516573385
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.9999298078221466,
+        "y": 0.910511516573385
+      },
+      "prevControl": {
+        "x": 1.9999298078221466,
+        "y": 0.910511516573385
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 0.0,
+      "names": [
+        "RaiseArmToHigh"
+      ]
+    },
+    {
+      "position": 1.0,
+      "names": [
+        "ToggleClaw"
+      ]
+    },
+    {
+      "position": 0.0,
+      "names": [
+        "RaiseArmToHigh"
+      ]
+    },
+    {
+      "position": 1.0,
+      "names": [
+        "ToggleClaw"
+      ]
+    }
+  ]
+}

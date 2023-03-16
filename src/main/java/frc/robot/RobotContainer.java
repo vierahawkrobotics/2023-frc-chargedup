@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawStates;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -27,8 +28,15 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+
+import java.util.HashMap;
 import java.util.List;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 //import java.util.function.Supplier;
 import edu.wpi.first.wpilibj.XboxController;
@@ -38,13 +46,25 @@ public class RobotContainer {
   ArmSubsystem armSubsystem;
   ClawSubsystem clawSubsystem;
   TelescopeSubsystem telescopeSubsystem;
+  Lemonlight lemonlight;
+  LEDSubsystems ledSubsystems;
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  XboxController joystickArm;
+  XboxController joystick;
+
+  
+
 
 
   public RobotContainer() {
+    joystickArm = new XboxController(1);
+    joystick = new XboxController(0);
+    
     armSubsystem = new ArmSubsystem();
     clawSubsystem = new ClawSubsystem();
     telescopeSubsystem = new TelescopeSubsystem();
+    //lemonlight = new Lemonlight();
+    //ledSubsystems = new LEDSubsystems(joystick);
     configureBindings();
   }
 //FYI: you can rebind the buttons on the back on the controller by holding down the middle back button, 
@@ -53,8 +73,6 @@ public class RobotContainer {
   private void configureBindings() {
     //tab.add("X", 0.9).getEntry();
     //tab.add("Y", 0.1).getEntry();
-    XboxController joystickArm = new XboxController(1);
-    XboxController joystick = new XboxController(0);
     //armSubsystem.setDefaultCommand(new SetArmPosCommand(() -> {return -joystick.getLeftY() * 2;}, armSubsystem));
     //armSubsystem.setDefaultCommand(new SetArmToPoint(() -> {return joystick.getLeftX() * 2;},() -> {return -joystick.getLeftY() * 2 + Constants.armHeight;},telescopeSubsystem, armSubsystem));
     new Trigger(joystickArm.povUp(new EventLoop())).onTrue(new JoystickArmStateCommand(1, armSubsystem, telescopeSubsystem));
@@ -65,6 +83,8 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+    
+    //new JoystickButton(joystick, Constants.CandleConstants.BlockButton).whenPressed(ledSubsystems::setColors, ledSubsystems);
 
     
 
@@ -89,36 +109,66 @@ public class RobotContainer {
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(DriveConstants.kDriveKinematics);
 
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
-        config);
+    
+    
+    HashMap <String, Command> eventMap = new HashMap<>();
+    eventMap.put("RaiseArmToHigh", new SetArmStateCommand(Constants.ArmStates.High, armSubsystem, telescopeSubsystem));
+    eventMap.put("RaiseArmToLow", new SetArmStateCommand(Constants.ArmStates.Low, armSubsystem, telescopeSubsystem));
+    eventMap.put("RaiseArmToMid", new SetArmStateCommand(Constants.ArmStates.Middle, armSubsystem, telescopeSubsystem));
+    eventMap.put("LowerArmToGround", new SetArmStateCommand(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
+    eventMap.put("ReleaseClaw", new SetClawCommand(ClawStates.Open, clawSubsystem));
+    eventMap.put("EngageClaw", new SetClawCommand(ClawStates.Closed, clawSubsystem));
+    eventMap.put("ToggleClaw", new SetClawCommand(ClawStates.Toggle, clawSubsystem));
+
+    PathPlannerTrajectory TopBalance = PathPlanner.loadPath("TopBalance", new PathConstraints(4, 3));
+    HashMap<String, Command> topEventMap = new HashMap<>();
+    //topEventMap.put(null, getAutonomousCommand());
+
+    PathPlannerTrajectory TopPlace = PathPlanner.loadPath("TopPlace", new PathConstraints(1, .5));
+    HashMap<String, Command> topPlaceEventMap = new HashMap<>();
+
+    PathPlannerTrajectory MiddleBalance = PathPlanner.loadPath("MiddleBalance", new PathConstraints(.5, .5));
+    HashMap<String, Command> middleBalanceEventMap = new HashMap<>();
+
+    PathPlannerTrajectory BottomBalance = PathPlanner.loadPath("BottomBalance", new PathConstraints(1, .5));
+    HashMap<String, Command> bottomBalanceEventMap = new HashMap<>();
+
+    PathPlannerTrajectory BottomPlace = PathPlanner.loadPath("BottomPlace", new PathConstraints(1, .5));
+    HashMap<String, Command> bottomPlaceEventMap = new HashMap<>();
+
+    PathPlannerTrajectory Straight = PathPlanner.loadPath("Straight", new PathConstraints(1, .5));
+
+    PathPlannerTrajectory Simple = PathPlanner.loadPath("Simple", new PathConstraints(2,.5));
+
+    PathPlannerTrajectory Middle = PathPlanner.loadPath("Middle", new PathConstraints(2,1));
+
+    PathPlannerTrajectory Sides = PathPlanner.loadPath("Sides", new PathConstraints(2,1));
+
+
+    //eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+    //eventMap.put("intakeDown", new IntakeDown());
+
 
     var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        m_robotDrive::getPose, // Functional interface to feed supplier
+    SwerveAutoBuilder swerveAutoBuilder = new SwerveAutoBuilder(
+        m_robotDrive::getPose,
+        m_robotDrive::resetOdometry,
         DriveConstants.kDriveKinematics,
-
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
+        new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+        new PIDConstants(8, 0.0, 0.0),
         m_robotDrive::setModuleStates,
-        m_robotDrive);
+        eventMap,
+        true,
+        m_robotDrive
+    );
 
-    // Reset odometry to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+    Command FullAuto = swerveAutoBuilder.fullAuto(BottomBalance);
 
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+    //return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+    return FullAuto;
   }
 }

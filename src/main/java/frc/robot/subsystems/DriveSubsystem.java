@@ -4,17 +4,35 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+
+import java.util.List;
+
+import org.ejml.dense.row.decompose.lu.LUDecompositionAlt_CDRM;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
+
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj.SPI;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -41,7 +59,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
-
+  private AutoConstants autoConstants = new AutoConstants();
+  private final Lemonlight lemonlight = new Lemonlight();
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -68,7 +87,11 @@ public class DriveSubsystem extends SubsystemBase {
             m_frontRight.getPosition(),
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
-        });
+    });
+
+    // if(lemonlight.aprilTag()){
+    //   resetOdometry(lemonlight.getPose2d());
+    // }
   }
 
   /**
@@ -77,7 +100,12 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    // if(lemonlight.aprilTag()){
+    //   return lemonlight.getPose2d();
+    // }
+    // else {
+      return m_odometry.getPoseMeters();
+    //}
   }
 
   /**
@@ -86,7 +114,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
-    m_odometry.resetPosition(
+      m_odometry.resetPosition(
         Rotation2d.fromDegrees(-m_gyro.getAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
@@ -95,7 +123,11 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
         },
         pose);
+
   }
+    
+   
+  
 
   /**
    * Method to drive the robot using joystick info.
@@ -180,5 +212,52 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  public Command pathGeneration(PathPoint intialPathPoint, PathPoint finalPathPoint) {
+    // Create config for trajectory
+    TrajectoryConfig config = new TrajectoryConfig(
+        AutoConstants.kMaxSpeedMetersPerSecond,
+        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+        // Add kinematics to ensure max speed is actually obeyed
+        .setKinematics(DriveConstants.kDriveKinematics);
+
+    // An example trajectory to follow. All units in meters.
+    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+    //     // Start at the origin facing the +X direction
+    //     new Pose2d(0, 0, new Rotation2d(0)),
+    //     // Pass through these two interior waypoints, making an 's' curve path
+    //     List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+    //     // End 3 meters straight ahead of where we started, facing forward
+    //     new Pose2d(3, 0, new Rotation2d(0)),
+    //     config);
+
+    PathPlannerTrajectory goToPoint = PathPlanner.generatePath(
+        new PathConstraints(autoConstants.kMaxSpeedMetersPerSecond,
+            autoConstants.kMaxAccelerationMetersPerSecondSquared),
+        intialPathPoint,
+        finalPathPoint);
+
+    var thetaController = new ProfiledPIDController(
+        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+        goToPoint,
+        this::getPose, // Functional interface to feed supplier
+        DriveConstants.kDriveKinematics,
+
+        // Position controllers
+        new PIDController(AutoConstants.kPXController, 0, 0),
+        new PIDController(AutoConstants.kPYController, 0, 0),
+        thetaController,
+        this::setModuleStates,
+        this);
+
+    // Reset odometry to the starting pose of the trajectory.
+    this.resetOdometry(goToPoint.getInitialPose());
+
+    // Run path following command, then stop at the end.
+    return swerveControllerCommand.andThen(() -> this.drive(0.0, 0.0, 0.0, false));
   }
 }
