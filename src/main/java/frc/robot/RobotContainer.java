@@ -89,7 +89,7 @@ public class RobotContainer {
         .onTrue(new JoystickArmStateCommand(-1, armSubsystem, telescopeSubsystem));
     new JoystickButton(joystickArm, 1).onTrue(new SetClawCommand(ClawStates.Toggle, clawSubsystem));
 
-    new JoystickButton(joystick, 2).whileTrue(new RepeatCommand(getAutonomousCommand()));
+    new JoystickButton(joystick, 2).whileTrue(new RepeatCommand(new BalanceCommand(m_robotDrive)));
     new JoystickButton(joystick, Button.kR1.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
