@@ -19,7 +19,7 @@ public class TelescopeSubsystem extends SubsystemBase {
     /** Create Variables: Motor, Encoder, PID */
     final CANSparkMax motor = new CANSparkMax(Constants.TelescopeArmConstants.scopeMotorID, MotorType.kBrushless);
     final RelativeEncoder encoder = motor.getEncoder();
-    final PIDController pid = new PIDController(Constants.TelescopeArmConstants.ScopeP,
+    public final PIDController pid = new PIDController(Constants.TelescopeArmConstants.ScopeP,
             Constants.TelescopeArmConstants.ScopeI, Constants.TelescopeArmConstants.ScopeD);
 
     static double targetLength = 0;
@@ -29,6 +29,8 @@ public class TelescopeSubsystem extends SubsystemBase {
     static boolean reset;
 
     public TelescopeSubsystem() {
+        
+        pid.setIntegratorRange(-1, 1);
         m_limitSwitch = new DigitalInput(3);
 
         motor.setIdleMode(IdleMode.kBrake);
@@ -146,8 +148,8 @@ public class TelescopeSubsystem extends SubsystemBase {
         //     }
         // }   
 
-        boolean state = m_limitSwitch.get(); // get the state of the switch
-        System.out.println(state);
+        // boolean state = m_limitSwitch.get(); // get the state of the switch
+        // System.out.println(state);
     }
 
     @Override

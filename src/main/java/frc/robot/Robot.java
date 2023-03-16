@@ -41,11 +41,13 @@ private Command m_autonomousCommand;
   public void disabledExit() {
     m_robotContainer.armSubsystem.setRadian(Constants.ArmStates.Ground);
     m_robotContainer.telescopeSubsystem.setLength(Constants.ArmStates.Ground);
+    m_robotContainer.telescopeSubsystem.pid.reset();
+    m_robotContainer.armSubsystem.armPID.reset();
   }
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.BalanceGroup(true);
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();

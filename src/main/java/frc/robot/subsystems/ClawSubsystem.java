@@ -22,18 +22,18 @@ public class ClawSubsystem extends SubsystemBase {
 
     public ClawSubsystem() {
         setName("claw");
-        solenoid1.set(Value.kReverse);
+        solenoid1.set(Value.kForward);
         clawState = ClawStates.Closed;
         clawStateEntry = Shuffleboard.getTab("Main").add("Claw State", "Closed").withPosition(1, 3) .getEntry();
     }
 
     public void OpenClaw(){
-        solenoid1.set(Value.kForward);
+        solenoid1.set(Value.kReverse);
         isClawOpen = true;
     }
 
     public void CloseClaw(){
-        solenoid1.set(Value.kReverse);
+        solenoid1.set(Value.kForward);
         isClawOpen = false;
     }
 

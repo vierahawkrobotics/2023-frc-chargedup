@@ -21,7 +21,7 @@ public class BalanceCommand extends CommandBase {
     public static boolean isFinished = false;
 
     public double adjust = 0;
-    public static PIDController gyroPID = new PIDController(0.0025, 0, 0.0001);
+    public static PIDController gyroPID = new PIDController(0.0078, 0, 0.001);
 
     public BalanceCommand(DriveSubsystem drive) {
         this.drive = drive;
@@ -41,13 +41,14 @@ public class BalanceCommand extends CommandBase {
         if (Math.abs(drive.m_gyro.getRoll()) < 2)
             adjust = 0;
         drive.setX();
-        drive.drive(0, adjust, 0, true);
+        drive.drive(-adjust, 0, 0, true);
 
         System.out.println(gyroPID.getP());
     }
 
     @Override
     public void end(boolean ending) {
+        System.out.println("Finsihed");
 
     }
 

@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -28,7 +29,9 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +60,7 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   XboxController joystickArm;
   XboxController joystick;
+  SequentialCommandGroup balanceSequence;
 
   public RobotContainer() {
     joystickArm = new XboxController(1);
@@ -117,12 +121,12 @@ public class RobotContainer {
     eventMap.put("RaiseArmToHigh", new SetArmStateCommand(Constants.ArmStates.High, armSubsystem, telescopeSubsystem));
     eventMap.put("RaiseArmToLow", new SetArmStateCommand(Constants.ArmStates.Low, armSubsystem, telescopeSubsystem));
     eventMap.put("RaiseArmToMid", new SetArmStateCommand(Constants.ArmStates.Middle, armSubsystem, telescopeSubsystem));
-    eventMap.put("LowerArmToGround",
-        new SetArmStateCommand(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
-    eventMap.put("ReleaseClaw", new SetClawCommand(ClawStates.Open, clawSubsystem));
-    eventMap.put("EngageClaw", new SetClawCommand(ClawStates.Closed, clawSubsystem));
+    eventMap.put("LowerArmToGround", new SetArmStateCommand(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
+    eventMap.put("OpenClaw", new SetClawCommand(ClawStates.Open, clawSubsystem));
+    eventMap.put("CloseClaw", new SetClawCommand(ClawStates.Closed, clawSubsystem));
     eventMap.put("ToggleClaw", new SetClawCommand(ClawStates.Toggle, clawSubsystem));
-    eventMap.put("Balance", new BalanceCommand(m_robotDrive));
+    eventMap.put("Wait", new WaitCommand(.5));
+    //eventMap.put("Balance", new BalanceCommand(m_robotDrive));
 
     PathPlannerTrajectory TopBalance = PathPlanner.loadPath("TopBalance", new PathConstraints(4, 3));
     HashMap<String, Command> topEventMap = new HashMap<>();
@@ -146,7 +150,12 @@ public class RobotContainer {
 
     PathPlannerTrajectory Middle = PathPlanner.loadPath("Middle", new PathConstraints(2, 1));
 
-    PathPlannerTrajectory Sides = PathPlanner.loadPath("Sides", new PathConstraints(2, 1));
+    PathPlannerTrajectory Sides = PathPlanner.loadPath("Sides", new PathConstraints(.5, .5));
+
+    PathPlannerTrajectory Bal = PathPlanner.loadPath("Bal", new PathConstraints(2,.5));
+
+
+    //PathPlannerTrajectory Fun = PathPlanner.loadPath("Fun", new PathConstraints(2,.5));
 
     SwerveAutoBuilder swerveAutoBuilder = new SwerveAutoBuilder(
         m_robotDrive::getPose,
@@ -160,11 +169,26 @@ public class RobotContainer {
         true,
         m_robotDrive);
 
-    Command FullAuto = swerveAutoBuilder.fullAuto(Sides);
+    Command FullAuto = swerveAutoBuilder.fullAuto(Middle);
 
     // Run path following command, then stop at the end.
     // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
     // false));
     return FullAuto;
+  }
+
+  public SequentialCommandGroup BalanceGroup(boolean Balance){
+
+    if(Balance){
+      balanceSequence = new SequentialCommandGroup(
+      getAutonomousCommand(),
+      new RepeatCommand(new BalanceCommand(m_robotDrive))
+    );
+    } else{
+      balanceSequence = (SequentialCommandGroup)getAutonomousCommand();
+    }
+  
+    return balanceSequence;
+
   }
 }

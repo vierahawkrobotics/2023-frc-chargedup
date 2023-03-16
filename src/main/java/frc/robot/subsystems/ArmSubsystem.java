@@ -34,10 +34,11 @@ public class ArmSubsystem extends SubsystemBase {
     /***
      * Defines the PID controller in variables ArmP, ArmI, ArmD
      */
-    final static PIDController armPID = new PIDController(Constants.RotationArmConstants.ArmP, Constants.RotationArmConstants.ArmI, Constants.RotationArmConstants.ArmD);
+    public final static PIDController armPID = new PIDController(Constants.RotationArmConstants.ArmP, Constants.RotationArmConstants.ArmI, Constants.RotationArmConstants.ArmD);
 
     public ArmSubsystem() {
 
+        armPID.setIntegratorRange(-1, 1);
        setName("name");
         ShuffleboardTab tab = Shuffleboard.getTab("Arm Rotation");
         //tab.addNumber(getName(), null)
