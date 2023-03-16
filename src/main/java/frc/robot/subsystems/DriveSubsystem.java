@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -15,12 +16,22 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 
 import java.security.spec.MGF1ParameterSpec;
+import java.util.Map;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.BalanceCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
+import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
@@ -47,8 +58,26 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   public final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
-  Lemonlight lemon = new Lemonlight();
+  // Shuffleboard entries
+  private static GenericEntry targetSpeedWidget;
+  private static GenericEntry translationalSpeedWidget;
+  private static GenericEntry currentSpeedDrivetrainWidget;
+  private static GenericEntry currentRotSpeedWidget;
+  private static GenericEntry pitchWidget;
+  private static GenericEntry rollWidget;
+  private static GenericEntry yawWidget;
+  private static GenericEntry xPowerWidget;
+  private static GenericEntry yPowerWidget;
+  private static GenericEntry rotPowerWidget;
+  
 
+  // Variables for shuffleboard
+  private static double targSpeed = 0;
+  private static double translationalSpeed = 0;
+  private static double currentRotationSpeed = 0;
+  private static double xPower = 0;
+  private static double yPower = 0;
+  private static double rotPower = 0;
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -63,42 +92,25 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    m_gyro.calibrate();
+    initShuffleboard();
   }
 
-
-  long lastTime = System.currentTimeMillis();
-  double lastAngle = 0;
-  
-  double angSpeed = 0;
-  
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-      Rotation2d.fromDegrees(-m_gyro.getAngle()),
-      new SwerveModulePosition[] {
-        m_frontLeft.getPosition(),
-        m_frontRight.getPosition(),
-        m_rearLeft.getPosition(),
+        Rotation2d.fromDegrees(-m_gyro.getAngle()),
+        new SwerveModulePosition[] {
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_rearLeft.getPosition(),
             m_rearRight.getPosition()
-          });
-          
-          updateSB();
-          
-          long currTime = System.currentTimeMillis();
+        });
 
-          double tv = (double)(currTime - lastTime);
-          tv/=1000;
-          
-          
-          angSpeed = (m_gyro.getAngle() - lastAngle)/tv;
-          
-        lastTime = System.currentTimeMillis();
-        lastAngle = m_gyro.getAngle();
-        
-    // lemon.lemonLightPeriodic();
-          
-        }
+    updateSB();
+    // System.out.println(Constants.ModuleConstants.kDrivingP);
+  }
 
   /**
    * Returns the currently-estimated pose of the robot.
@@ -136,6 +148,11 @@ public class DriveSubsystem extends SubsystemBase {
    *                      field.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+
+    DriveSubsystem.xPower = xSpeed;
+    DriveSubsystem.yPower = ySpeed;
+    DriveSubsystem.rotPower = rot;
+
     // Adjust input based on max speed
     xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
     ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
@@ -152,22 +169,12 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
 
-    // System.out.println(this.getHeading());
-
-    targSpeed = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
-    currentSpeed = m_frontLeft.m_drivingEncoder.getVelocity();
-
-    targetRot = Units.radiansToDegrees(rot);
-    currentRot = m_gyro.getRate();
-
+    // Update variables for shuffleboard
+    DriveSubsystem.targSpeed = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+    DriveSubsystem.translationalSpeed = m_frontLeft.m_drivingEncoder.getVelocity();
+    DriveSubsystem.currentRotationSpeed = Math.toRadians(m_gyro.getRate());
   }
-
-  double targSpeed = 0;
-  double currentSpeed = 0;
   
-  double currentRot = 0;
-  double targetRot = 0;
-
   /**
    * Sets the wheels into an X formation to prevent movement.
    */
@@ -224,17 +231,39 @@ public class DriveSubsystem extends SubsystemBase {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
-
-  private static final GenericEntry targetSpeedWidget= Shuffleboard.getTab("Drive").add("targetSpeed", 0).withPosition(0, 0).getEntry();
-  private static final GenericEntry currentSpeedWidget = Shuffleboard.getTab("Drive").add("currentSpeed",0).withSize(1, 1).getEntry();
- 
-  private static final GenericEntry targetRotWidget= Shuffleboard.getTab("Drive").add("targetRot", 0).withPosition(2, 2).getEntry();
-  private static final GenericEntry currentRotWidget = Shuffleboard.getTab("Drive").add("currentRot",0).withSize(2, 1).getEntry();
   private void updateSB() {
     targetSpeedWidget.setDouble(targSpeed);
-    currentSpeedWidget.setDouble(currentSpeed);
+    currentSpeedDrivetrainWidget.setDouble(translationalSpeed);
 
-    targetRotWidget.setDouble(targetRot);
-    currentRotWidget.setDouble(angSpeed);
+    translationalSpeedWidget.setDouble(translationalSpeed);
+    currentRotSpeedWidget.setDouble(currentRotationSpeed);
+    pitchWidget.setDouble(m_gyro.getRoll());
+    rollWidget.setDouble(m_gyro.getPitch());
+    yawWidget.setDouble(-m_gyro.getAngle());
+
+    xPowerWidget.setDouble(xPower);
+    yPowerWidget.setDouble(yPower);
+    rotPowerWidget.setDouble(rotPower);
+  }
+
+  private void initShuffleboard() {
+    // Testing
+    targetSpeedWidget = Shuffleboard.getTab("Drivetrain").add("targetSpeed", 0).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("min", 0, "max", 5)).withPosition(0, 0).getEntry();
+    currentSpeedDrivetrainWidget = Shuffleboard.getTab("Drivetrain").add("translationalSpeed", 0).withSize(1, 1).getEntry();
+    
+    
+    // Final Driverstation
+    translationalSpeedWidget = Shuffleboard.getTab("Main").getLayout("Speed", BuiltInLayouts.kList).withPosition(1, 0).withSize(1, 2).withProperties(Map.of("Label Position", "TOP")).add("Translational", 0).withSize(1, 2).getEntry();
+    currentRotSpeedWidget = Shuffleboard.getTab("Main").getLayout("Speed", BuiltInLayouts.kList).add("Rotational", 0).getEntry();
+
+    yawWidget = Shuffleboard.getTab("Main").getLayout("Attitude", BuiltInLayouts.kList).withPosition(0, 2) .withSize(1, 2).withProperties(Map.of("Label Position", "TOP")).add("Yaw", 0).getEntry();
+    pitchWidget = Shuffleboard.getTab("Main").getLayout("Attitude", BuiltInLayouts.kList).add("Pitch", 0).getEntry();
+    rollWidget = Shuffleboard.getTab("Main").getLayout("Attitude", BuiltInLayouts.kList).add("Roll", 0).getEntry();
+
+    xPowerWidget = Shuffleboard.getTab("Main").getLayout("Throttle", BuiltInLayouts.kList).withPosition(0, 0).withSize(1, 2).withProperties(Map.of("Label Position", "LEFT")).add("X" , 0).getEntry();
+    yPowerWidget = Shuffleboard.getTab("Main").getLayout("Throttle", BuiltInLayouts.kList).add("Y" , 0).getEntry();
+    rotPowerWidget = Shuffleboard.getTab("Main").getLayout("Throttle", BuiltInLayouts.kList).add("Z" , 0).getEntry();
+
+    Shuffleboard.getTab("Main").getLayout("Balance PID", BuiltInLayouts.kList).withPosition(8, 0).withProperties(Map.of("Label Position", "HIDDEN")).withSize(2, 2).add(BalanceCommand.gyroPID).withWidget(BuiltInWidgets.kPIDController);
   }
 }

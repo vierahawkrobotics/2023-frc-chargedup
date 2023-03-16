@@ -10,6 +10,8 @@ import edu.wpi.first.math.util.Units;
 
 
 public class Constants {
+
+    public static final int CANdleID = 1;
    
     public final static double midHeight = .87;
     public final static double highHeight = 1.17;
@@ -29,6 +31,8 @@ public class Constants {
       
       public final static double clawLength = 0.305;
       public final static double armHeight = 1.05;
+
+      
 
       public static final class TelescopeArmConstants{
         public final static double ScopeP = 1.7;
@@ -63,7 +67,7 @@ public class Constants {
       public static final class DriveConstants {
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
-        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxSpeedMetersPerSecond = 4;
         public static final double kMaxAngularSpeed = 2*Math.PI; // radians per second
         
         // Chassis configuration
@@ -153,7 +157,7 @@ public class Constants {
       }
     
       public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 4;
+        public static final double kMaxSpeedMetersPerSecond = 4.5;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;

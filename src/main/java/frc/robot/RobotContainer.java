@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawStates;
@@ -39,6 +40,7 @@ public class RobotContainer {
   ArmSubsystem armSubsystem;
   ClawSubsystem clawSubsystem;
   TelescopeSubsystem telescopeSubsystem;
+  CANdleSystem candleSubsystem;
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
 
@@ -47,6 +49,7 @@ public class RobotContainer {
     armSubsystem = new ArmSubsystem();
     clawSubsystem = new ClawSubsystem();
     telescopeSubsystem = new TelescopeSubsystem();
+    candleSubsystem = new CANdleSystem(); 
     configureBindings();
   }
 //FYI: you can rebind the buttons on the back on the controller by holding down the middle back button, 
@@ -63,8 +66,7 @@ public class RobotContainer {
     new Trigger(joystickArm.povDown(new EventLoop())).onTrue(new JoystickArmStateCommand(-1, armSubsystem, telescopeSubsystem));
     new JoystickButton(joystickArm, 1).onTrue(new SetClawCommand(ClawStates.Toggle, clawSubsystem));
     
-    // new JoystickButton(joystick, 2).onTrue(getAutonomousCommand());
-
+    new JoystickButton(joystick, 2).whileTrue(new RepeatCommand(getAutonomousCommand()));
     new JoystickButton(joystick, Button.kR1.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),

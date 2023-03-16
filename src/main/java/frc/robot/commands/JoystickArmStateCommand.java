@@ -14,7 +14,7 @@ public class JoystickArmStateCommand extends CommandBase {
     public TelescopeSubsystem telescope;
     public int state;
 
-    static Constants.ArmStates currentState = Constants.ArmStates.Ground;
+    public static Constants.ArmStates currentState = Constants.ArmStates.Ground;
 
     public JoystickArmStateCommand(int state, ArmSubsystem arm, TelescopeSubsystem telescope ) {
         this.arm = arm;

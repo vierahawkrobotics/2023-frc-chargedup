@@ -54,11 +54,11 @@ private Command m_autonomousCommand;
 
   @Override
   public void autonomousPeriodic() { 
-    // m_autonomousCommand.execute();
+    m_autonomousCommand.execute();
   }
   @Override
   public void autonomousExit() {
-    // BalanceCommand.isFinished = false;
+    BalanceCommand.isFinished = true;
   }
 
   @Override

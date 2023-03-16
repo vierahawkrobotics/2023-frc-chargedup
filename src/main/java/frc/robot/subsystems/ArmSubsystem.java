@@ -4,14 +4,23 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import java.lang.Math;
+import java.util.Map;
+
 import frc.robot.Constants;
+import frc.robot.commands.JoystickArmStateCommand;
+import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
+
     static double targetRadian;
     
     /***
@@ -25,10 +34,11 @@ public class ArmSubsystem extends SubsystemBase {
     /***
      * Defines the PID controller in variables ArmP, ArmI, ArmD
      */
-    final PIDController pidController = new PIDController(Constants.RotationArmConstants.ArmP, Constants.RotationArmConstants.ArmI, Constants.RotationArmConstants.ArmD);
+    final static PIDController armPID = new PIDController(Constants.RotationArmConstants.ArmP, Constants.RotationArmConstants.ArmI, Constants.RotationArmConstants.ArmD);
 
     public ArmSubsystem() {
-        setName("name");
+
+       setName("name");
         ShuffleboardTab tab = Shuffleboard.getTab("Arm Rotation");
         //tab.addNumber(getName(), null)
         tab.addNumber("Motor Position:", () -> {return getPosition();});
@@ -36,15 +46,41 @@ public class ArmSubsystem extends SubsystemBase {
         //tab.addNumber("Length of Arm:", () -> {return tSubsystem.getRadiansToLength(encoder.getPosition());});
         tab.addNumber("Motor Input:", () -> {return motor.get();});
         tab.addNumber("Motor RPM:", () -> {return motor.getEncoder().getVelocity();});
+
+        Shuffleboard.getTab("Main").addString("Arm State", () -> {return getState();}).withPosition(1, 2);
+        Shuffleboard.getTab("Main").getLayout("Arm PID", BuiltInLayouts.kList).withPosition(8, 2) .withProperties(Map.of("Label Position", "HIDDEN")).withSize(2, 2).add(armPID).withWidget(BuiltInWidgets.kPIDController);
     }
 
-    /**
+    private String getState() {
+        Constants.ArmStates state = JoystickArmStateCommand.currentState;
+
+        if (state == Constants.ArmStates.Ground){
+            return "Ground";
+        }
+
+        else if (state == Constants.ArmStates.Collect){
+            return "Collect";
+        }
+
+        else if (state == Constants.ArmStates.Low){
+            return "Low";
+        }
+
+        else if (state == Constants.ArmStates.Middle){
+            return "Middle";
+        }
+
+        else{
+            return "High";
+        }
+    }
+/**
      * Sets the target of the pid
      * 
      * @param target target in radians that the position of the arm should be in.
      */
     void setPID(double target) {
-        motor.set(pidController.calculate(getPosition(), target));
+        motor.set(armPID.calculate(getPosition(), target));
     }
 
     /***
@@ -103,16 +139,16 @@ public class ArmSubsystem extends SubsystemBase {
      * @param height The height and the position of the arm(decimal)
      */
     void setTargetHeight(double height) {
-        motor.set(pidController.calculate(getPosition(), getHeightToRadians(height)));
+        motor.set(armPID.calculate(getPosition(), getHeightToRadians(height)));
     }
 
     /***
      * Sets the target rotation
      * 
-     * @param radians Calculates the pidController, radians, and gets position
+     * @param radians Calculates the armPID, radians, and gets position
      */
     void setTargetRotation(double radians) {
-        double v = pidController.calculate(getPosition(), radians);
+        double v = armPID.calculate(getPosition(), radians);
         if(v < 0.01 && v > -0.01) v = 0;
         if(v > 0.8) v = 0.8;
         if(v < -0.8) v = -0.8;
@@ -172,9 +208,7 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // set to target rotation value
-        //setTargetRotation(targetRadian);
-        //System.out.println(getPosition());
-        setTargetRotation(targetRadian);
+        setTargetRotation(targetRadian);       
     }
 
     @Override

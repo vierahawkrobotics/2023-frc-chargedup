@@ -1,8 +1,15 @@
 package frc.robot.commands;
 
+import javax.naming.spi.ObjectFactory;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,38 +21,29 @@ public class BalanceCommand extends CommandBase {
     public static boolean isFinished = false;
 
     public double adjust = 0;
-    PIDController gyroPID = new PIDController(0.5, 0, 0);
-    
-    private static GenericEntry pitch;
-    private static GenericEntry motorpower;
-    
-    public BalanceCommand(DriveSubsystem drive) {  
+    public static PIDController gyroPID = new PIDController(0.0025, 0, 0.0001);
+
+    public BalanceCommand(DriveSubsystem drive) {
         this.drive = drive;
         addRequirements(drive);
     }
-    
+
     @Override
     public void initialize() {
-        pitch = Shuffleboard.getTab("Drive").add("Pitch", 0).withPosition(3, 3).getEntry();
-        motorpower = Shuffleboard.getTab("Drive").add("Motor Power",0).withSize(3, 4).getEntry();
         System.out.println("Intialized");
     }
 
     @Override
     public void execute() {
-        while(!isFinished()){
-            adjust = gyroPID.calculate(-drive.m_gyro.getPitch(), 0);
-            if (Math.abs(adjust) < 0.01) adjust = 0;
-            drive.drive(adjust, 0, 0, false);
-    
-            pitch.setDouble(drive.m_gyro.getPitch());
-            motorpower.setDouble(adjust);
-            System.out.println("executing");
+        System.out.println("executing");
 
-            if (Math.abs(drive.m_gyro.getPitch()) < 3){
-                isFinished = true;
-            }
-        }
+        adjust = gyroPID.calculate(drive.m_gyro.getRoll(), 0);
+        if (Math.abs(drive.m_gyro.getRoll()) < 2)
+            adjust = 0;
+        drive.setX();
+        drive.drive(0, adjust, 0, true);
+
+        System.out.println(gyroPID.getP());
     }
 
     @Override
