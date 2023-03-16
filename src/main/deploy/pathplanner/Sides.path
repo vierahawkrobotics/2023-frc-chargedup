@@ -1,0 +1,196 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 2.39,
+        "y": 4.5
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.4892414593197576,
+        "y": 4.5
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.9060626411650967,
+        "y": 4.5
+      },
+      "prevControl": {
+        "x": 1.8497423411708664,
+        "y": 4.515010716204102
+      },
+      "nextControl": {
+        "x": 1.962382941159327,
+        "y": 4.484989283795898
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.39,
+        "y": 4.5
+      },
+      "prevControl": {
+        "x": 2.3847851911160514,
+        "y": 4.496237282872693
+      },
+      "nextControl": {
+        "x": 2.395214808883949,
+        "y": 4.503762717127307
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.4,
+        "y": 4.5
+      },
+      "prevControl": {
+        "x": 2.4187734333314093,
+        "y": 4.51877343333141
+      },
+      "nextControl": {
+        "x": 2.390613283334295,
+        "y": 4.490613283334294
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 5.670136024112799,
+        "y": 4.5
+      },
+      "prevControl": {
+        "x": 5.716357903371546,
+        "y": 4.4741865291693115
+      },
+      "nextControl": {
+        "x": 5.623914144854052,
+        "y": 4.5258134708306885
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.054991407406703,
+        "y": 4.496237282872693
+      },
+      "prevControl": {
+        "x": 5.839452776130377,
+        "y": 4.487558585187428
+      },
+      "nextControl": {
+        "x": 6.270530038683029,
+        "y": 4.504915980557958
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.805928740663103,
+        "y": 4.496237282872693
+      },
+      "prevControl": {
+        "x": 6.5382293896730665,
+        "y": 4.453643048386801
+      },
+      "nextControl": null,
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": 2.0,
+  "maxAcceleration": 1.0,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "RaiseArmToHigh"
+      ]
+    },
+    {
+      "position": 1.0,
+      "names": [
+        "ToggleClaw"
+      ]
+    },
+    {
+      "position": 2.97,
+      "names": [
+        "LowerArmToGround"
+      ]
+    }
+  ]
+}

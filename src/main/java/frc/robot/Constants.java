@@ -1,13 +1,19 @@
 package frc.robot;
 
+import java.util.ArrayList;
+
+import com.pathplanner.lib.PathPoint;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.XboxController;
 
-
+    
 
 public class Constants {
 
@@ -155,10 +161,30 @@ public class Constants {
       public static final class OIConstants {
         public static final int kDriverControllerPort = 0;
       }
+
+      public static final class LemonlightConstants {
+        public static final double aprilTagThreshold = .2;
+      }
+
+      public static final class CandleConstants {
+        public static final int CANdleID = 1;
+        public static final int JoystickId = 0;
+        public static final int IncrementAnimButton = XboxController.Button.kRightBumper.value;
+        public static final int DecrementAnimButton = XboxController.Button.kLeftBumper.value;
+        public static final int BlockButton = XboxController.Button.kStart.value;
+        public static final int MaxBrightnessAngle = 90;
+        public static final int MidBrightnessAngle = 180;
+        public static final int ZeroBrightnessAngle = 270;
+        public static final int VbatButton = XboxController.Button.kA.value;
+        public static final int V5Button = XboxController.Button.kB.value;
+        public static final int CurrentButton = XboxController.Button.kX.value;
+        public static final int TemperatureButton = XboxController.Button.kY.value;      
+      } 
     
       public static final class AutoConstants {
         public static final double kMaxSpeedMetersPerSecond = 4.5;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
     
@@ -173,6 +199,57 @@ public class Constants {
     
       public static final class NeoMotorConstants {
         public static final double kFreeSpeedRpm = 5676;
+      }
+    
+
+      public static final class FieldConstants {
+        private final double translationXCoor = 1.97;
+        private final double initialPose = .1;
+        private ArrayList <PathPoint> topAprilTagPoseList;
+        private ArrayList <PathPoint> middleAprilTagPoseList;
+        private ArrayList <PathPoint> bottomAprilTagPoseList;
+    
+    
+        public PathPoint aprilTagPathPoint1 = new PathPoint(new Translation2d(translationXCoor + initialPose, 1.05), new Rotation2d().fromDegrees(180), new Rotation2d(0).fromDegrees(-180));
+        public PathPoint aprilTagPathPoint2 = new PathPoint(new Translation2d(translationXCoor + initialPose, 2.75), new Rotation2d().fromDegrees(180), new Rotation2d(0).fromDegrees(-180));
+        public PathPoint aprilTagPathPoint3 = new PathPoint(new Translation2d(translationXCoor + initialPose, 4.40), new Rotation2d().fromDegrees(180), new Rotation2d(0).fromDegrees(-180));
+    
+        //1
+        PathPoint firstPose = new PathPoint(new Translation2d(translationXCoor + initialPose, 3.85), new Rotation2d().fromDegrees(0) , new Rotation2d().fromDegrees(180));
+        //2
+        PathPoint secondPose = new PathPoint(new Translation2d(translationXCoor + initialPose, 3.85), new Rotation2d().fromDegrees(0) , new Rotation2d().fromDegrees(180));
+        //3
+        PathPoint thirdPose = new PathPoint(new Translation2d(translationXCoor + initialPose , 3.29), new Rotation2d().fromDegrees(0), new Rotation2d().fromDegrees(180));
+        //4
+        PathPoint fourthPose = new PathPoint(new Translation2d(translationXCoor + initialPose, 2.19), new Rotation2d().fromDegrees(0), new Rotation2d().fromDegrees(180));
+        //5
+        PathPoint fifthPose = new PathPoint(new Translation2d(translationXCoor + initialPose, 1.6), new Rotation2d().fromDegrees(0), new Rotation2d().fromDegrees(180));
+        //6
+        PathPoint sixthPose = new PathPoint(new Translation2d(translationXCoor + initialPose, .51), new Rotation2d().fromDegrees(0), new Rotation2d().fromDegrees(180));
+    
+        public ArrayList <PathPoint> getUpperPathPoints () {
+          topAprilTagPoseList.add(firstPose);
+          topAprilTagPoseList.add(aprilTagPathPoint1);
+          topAprilTagPoseList.add(secondPose);
+    
+          return topAprilTagPoseList;
+        }
+    
+        public ArrayList <PathPoint> getMiddPoints () {
+          middleAprilTagPoseList.add(thirdPose);
+          middleAprilTagPoseList.add(aprilTagPathPoint2);
+          middleAprilTagPoseList.add(fourthPose);
+    
+          return topAprilTagPoseList;
+        }
+    
+        public ArrayList <PathPoint> getBottomPoints () {
+          bottomAprilTagPoseList.add(fifthPose);
+          bottomAprilTagPoseList.add(aprilTagPathPoint2);
+          bottomAprilTagPoseList.add(sixthPose);
+    
+          return topAprilTagPoseList;
+        }
       }
 }
 
