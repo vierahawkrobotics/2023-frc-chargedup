@@ -122,6 +122,7 @@ public class RobotContainer {
     eventMap.put("ReleaseClaw", new SetClawCommand(ClawStates.Open, clawSubsystem));
     eventMap.put("EngageClaw", new SetClawCommand(ClawStates.Closed, clawSubsystem));
     eventMap.put("ToggleClaw", new SetClawCommand(ClawStates.Toggle, clawSubsystem));
+    eventMap.put("Balance", new BalanceCommand(m_robotDrive));
 
     PathPlannerTrajectory TopBalance = PathPlanner.loadPath("TopBalance", new PathConstraints(4, 3));
     HashMap<String, Command> topEventMap = new HashMap<>();
