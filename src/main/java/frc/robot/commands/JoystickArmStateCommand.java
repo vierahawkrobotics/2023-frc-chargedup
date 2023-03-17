@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-
-
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 

@@ -91,7 +91,8 @@ public class DriveSubsystem extends SubsystemBase {
   private static GenericEntry xPowerWidget;
   private static GenericEntry yPowerWidget;
   private static GenericEntry rotPowerWidget;
-  
+  private static GenericEntry TranslationalSpeedCapWidget;
+  private static GenericEntry RotationalSpeedCapWidget;
 
   // Variables for shuffleboard
   private static double targSpeed = 0;
@@ -135,7 +136,6 @@ public class DriveSubsystem extends SubsystemBase {
         });
 
     updateSB();
-
   }
 
   /**
@@ -279,6 +279,9 @@ public class DriveSubsystem extends SubsystemBase {
     xPowerWidget.setDouble(xPower);
     yPowerWidget.setDouble(yPower);
     rotPowerWidget.setDouble(rotPower);
+
+    Constants.DriveConstants.kMaxSpeedMetersPerSecond = TranslationalSpeedCapWidget.getDouble(Constants.DriveConstants.kMaxSpeedMetersPerSecond);
+    Constants.DriveConstants.kMaxAngularSpeed = RotationalSpeedCapWidget.getDouble(Constants.DriveConstants.kMaxAngularSpeed);
   }
 
   private void initShuffleboard() {
@@ -288,6 +291,11 @@ public class DriveSubsystem extends SubsystemBase {
     
     
     // Final Driverstation
+
+    TranslationalSpeedCapWidget = Shuffleboard.getTab("Main").getLayout("Speed Caps", BuiltInLayouts.kList).withPosition(7, 0).withSize(1, 2).withProperties(Map.of("Label Position", "TOP")).add("Translational", Constants.DriveConstants.kMaxSpeedMetersPerSecond).withSize(1, 2).getEntry();
+    RotationalSpeedCapWidget = Shuffleboard.getTab("Main").getLayout("Speed Caps", BuiltInLayouts.kList).add("Rotational", Constants.DriveConstants.kMaxAngularSpeed).withSize(1, 2).getEntry();
+
+
     translationalSpeedWidget = Shuffleboard.getTab("Main").getLayout("Speed", BuiltInLayouts.kList).withPosition(1, 0).withSize(1, 2).withProperties(Map.of("Label Position", "TOP")).add("Translational", 0).withSize(1, 2).getEntry();
     currentRotSpeedWidget = Shuffleboard.getTab("Main").getLayout("Speed", BuiltInLayouts.kList).add("Rotational", 0).getEntry();
 
