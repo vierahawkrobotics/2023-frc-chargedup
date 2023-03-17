@@ -22,6 +22,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import java.security.spec.MGF1ParameterSpec;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.Constants;
@@ -45,11 +46,14 @@ import com.pathplanner.lib.PathPoint;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
@@ -93,6 +97,8 @@ public class DriveSubsystem extends SubsystemBase {
   private static GenericEntry rotPowerWidget;
   private static GenericEntry TranslationalSpeedCapWidget;
   private static GenericEntry RotationalSpeedCapWidget;
+  
+  private static ComplexWidget zeroYaw;
 
   // Variables for shuffleboard
   private static double targSpeed = 0;
@@ -170,9 +176,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
     
-   
-  
-
   /**
    * Method to drive the robot using joystick info.
    *
@@ -246,6 +249,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void zeroHeading() {
     m_gyro.reset();
     m_gyro.calibrate();
+    System.out.println("zeroed heading");
   }
 
   /**
@@ -289,16 +293,19 @@ public class DriveSubsystem extends SubsystemBase {
     targetSpeedWidget = Shuffleboard.getTab("Drivetrain").add("targetSpeed", 0).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("min", 0, "max", 5)).withPosition(0, 0).getEntry();
     currentSpeedDrivetrainWidget = Shuffleboard.getTab("Drivetrain").add("translationalSpeed", 0).withSize(1, 1).getEntry();
     
-    
+      
     // Final Driverstation
     TranslationalSpeedCapWidget = Shuffleboard.getTab("Main").getLayout("Speed Caps", BuiltInLayouts.kList).withPosition(7, 0).withSize(1, 2).withProperties(Map.of("Label Position", "TOP")).add("Translational", Constants.DriveConstants.kMaxSpeedMetersPerSecond).withSize(1, 2).getEntry();
     RotationalSpeedCapWidget = Shuffleboard.getTab("Main").getLayout("Speed Caps", BuiltInLayouts.kList).add("Rotational", Constants.DriveConstants.kMaxAngularSpeed).withSize(1, 2).getEntry();
+    
+    InstantCommand zero = new InstantCommand(() -> this.zeroHeading(), this);
+    zero.setName("Zero");
+    zeroYaw = Shuffleboard.getTab("Main").add("Zero Heading" , zero).withWidget(BuiltInWidgets.kCommand).withSize(1, 1).withPosition(3, 0);
 
-
-    translationalSpeedWidget = Shuffleboard.getTab("Main").getLayout("Speed", BuiltInLayouts.kList).withPosition(1, 0).withSize(1, 2).withProperties(Map.of("Label Position", "TOP")).add("Translational", 0).withSize(1, 2).getEntry();
+    translationalSpeedWidget = Shuffleboard.getTab("Main").getLayout("Speed", BuiltInLayouts.kList).withPosition(2, 0).withSize(1, 2).withProperties(Map.of("Label Position", "TOP")).add("Translational", 0).withSize(1, 2).getEntry();
     currentRotSpeedWidget = Shuffleboard.getTab("Main").getLayout("Speed", BuiltInLayouts.kList).add("Rotational", 0).getEntry();
 
-    yawWidget = Shuffleboard.getTab("Main").getLayout("Attitude", BuiltInLayouts.kList).withPosition(0, 2) .withSize(1, 2).withProperties(Map.of("Label Position", "TOP")).add("Yaw", 0).getEntry();
+    yawWidget = Shuffleboard.getTab("Main").getLayout("Attitude", BuiltInLayouts.kList).withPosition(0, 2 ) .withSize(1, 2).withProperties(Map.of("Label Position", "TOP")).add("Yaw", 0).getEntry();
     pitchWidget = Shuffleboard.getTab("Main").getLayout("Attitude", BuiltInLayouts.kList).add("Pitch", 0).getEntry();
     rollWidget = Shuffleboard.getTab("Main").getLayout("Attitude", BuiltInLayouts.kList).add("Roll", 0).getEntry();
 
