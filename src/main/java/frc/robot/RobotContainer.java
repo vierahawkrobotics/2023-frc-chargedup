@@ -122,7 +122,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("RaiseArmToHigh", new SetArmStateCommand(Constants.ArmStates.High, armSubsystem, telescopeSubsystem));
+    eventMap.put("RaiseArmToHigh", new SetArmStateCommand(Constants.ArmStates.Middle, armSubsystem, telescopeSubsystem));
     eventMap.put("RaiseArmToLow", new SetArmStateCommand(Constants.ArmStates.Low, armSubsystem, telescopeSubsystem));
     eventMap.put("RaiseArmToMid", new SetArmStateCommand(Constants.ArmStates.Middle, armSubsystem, telescopeSubsystem));
     eventMap.put("LowerArmToGround", new SetArmStateCommand(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
