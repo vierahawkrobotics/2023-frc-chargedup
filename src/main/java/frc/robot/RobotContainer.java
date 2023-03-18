@@ -172,7 +172,7 @@ public class RobotContainer {
         true,
         m_robotDrive);
 
-    Command FullAuto = swerveAutoBuilder.fullAuto(Bal);
+    Command FullAuto = swerveAutoBuilder.fullAuto(Sides);
 
     // Run path following command, then stop at the end.
     // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,

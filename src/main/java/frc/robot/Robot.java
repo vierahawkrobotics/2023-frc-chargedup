@@ -47,7 +47,7 @@ private Command m_autonomousCommand;
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.BalanceGroup(true);
+    m_autonomousCommand = m_robotContainer.BalanceGroup(false);
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
