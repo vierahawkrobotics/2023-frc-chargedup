@@ -116,6 +116,36 @@
       "names": [
         "event"
       ]
+    },
+    {
+      "position": 0.0,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 0.0,
+      "names": [
+        "RaiseArmToMid"
+      ]
+    },
+    {
+      "position": 0.894545454545422,
+      "names": [
+        "ToggleClaw"
+      ]
+    },
+    {
+      "position": 1.7,
+      "names": [
+        "LowerArmToGround"
+      ]
+    },
+    {
+      "position": 0.0,
+      "names": [
+        "event"
+      ]
     }
   ]
 }
