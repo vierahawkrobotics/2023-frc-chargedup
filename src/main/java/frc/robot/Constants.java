@@ -41,25 +41,25 @@ public class Constants {
       
 
       public static final class TelescopeArmConstants{
-        public final static double ScopeP = 1.7;
-        public final static double ScopeI = 0.35;
+        public final static double ScopeP = 4;
+        public final static double ScopeI = 0.02;
         public final static double ScopeD = 0;
 
         public final static int scopeMotorID = 10;
         public final static double ArmBLength = 0.45; 
         public final static double ArmWinchRadius = 0.00118443982 * 1.11111111111 *1.21348314607; //radius of gear 4.5466cm / gear ration 27
 
-        public final static double groundGoalTeleLength = 0 * ArmBLength;
-        public final static double lowGoalTeleLength = 0 * ArmBLength;
+        public final static double groundGoalTeleLength = 0.015 * ArmBLength;
+        public final static double lowGoalTeleLength = 0.015 * ArmBLength;
         public final static double collectGoalTeleLength = Units.inchesToMeters(7);
         public final static double middleGoalTeleLength = .60 * ArmBLength;
         public final static double highGoalTeleLength = 1 * ArmBLength;
       }
       
       public static final class RotationArmConstants{
-        public final static double ArmP = 1.0;
+        public final static double ArmP = 2.0;
         public final static double ArmI = 0.00;
-        public final static double ArmD = 0.05;
+        public final static double ArmD = 0.00;
 
         public final static int armMotorID = 9;
         public final static double ArmALength = 0.6477;

@@ -8,21 +8,24 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import java.lang.Math;
 import java.util.Map;
 
 import frc.robot.Constants;
+import frc.robot.Constants.ArmStates;
 import frc.robot.commands.JoystickArmStateCommand;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
 
     static double targetRadian;
-    
+
     /***
      * Defines the CANS spark max motor, and the motor type
      */
@@ -39,7 +42,6 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem() {
 
         armPID.setIntegratorRange(-1, 1);
-       setName("name");
         ShuffleboardTab tab = Shuffleboard.getTab("Arm Rotation");
         //tab.addNumber(getName(), null)
         tab.addNumber("Motor Position:", () -> {return getPosition();});
@@ -48,8 +50,8 @@ public class ArmSubsystem extends SubsystemBase {
         tab.addNumber("Motor Input:", () -> {return motor.get();});
         tab.addNumber("Motor RPM:", () -> {return motor.getEncoder().getVelocity();});
 
-        Shuffleboard.getTab("Main").addString("Arm State", () -> {return getState();}).withPosition(1, 2);
-        Shuffleboard.getTab("Main").getLayout("Arm PID", BuiltInLayouts.kList).withPosition(8, 2) .withProperties(Map.of("Label Position", "HIDDEN")).withSize(2, 2).add(armPID).withWidget(BuiltInWidgets.kPIDController);
+        Shuffleboard.getTab("Arm Rotation").addString("Arm State", () -> {return getState();}).withPosition(1, 2);
+        Shuffleboard.getTab("Arm Rotation").getLayout("Arm PID", BuiltInLayouts.kList).withPosition(8, 2) .withProperties(Map.of("Label Position", "HIDDEN")).withSize(2, 2).add(armPID).withWidget(BuiltInWidgets.kPIDController);
     }
 
     private String getState() {
@@ -149,6 +151,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @param radians Calculates the armPID, radians, and gets position
      */
     void setTargetRotation(double radians) {
+        System.out.println(radians);
         double v = armPID.calculate(getPosition(), radians);
         if(v < 0.01 && v > -0.01) v = 0;
         if(v > 0.8) v = 0.8;
@@ -209,7 +212,7 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // set to target rotation value
-        setTargetRotation(targetRadian);       
+        setTargetRotation(targetRadian); 
     }
 
     @Override

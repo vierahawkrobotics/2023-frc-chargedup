@@ -1,15 +1,27 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import javax.naming.LimitExceededException;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.EncoderType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,7 +30,7 @@ public class TelescopeSubsystem extends SubsystemBase {
 
     /** Create Variables: Motor, Encoder, PID */
     final CANSparkMax motor = new CANSparkMax(Constants.TelescopeArmConstants.scopeMotorID, MotorType.kBrushless);
-    final RelativeEncoder encoder = motor.getEncoder();
+    // RelativeEncoder encoder = motor.getEncoder();
     public final PIDController pid = new PIDController(Constants.TelescopeArmConstants.ScopeP,
             Constants.TelescopeArmConstants.ScopeI, Constants.TelescopeArmConstants.ScopeD);
 
@@ -28,6 +40,8 @@ public class TelescopeSubsystem extends SubsystemBase {
 
     static boolean reset;
 
+    
+
     public TelescopeSubsystem() {
         
         pid.setIntegratorRange(-1, 1);
@@ -35,11 +49,11 @@ public class TelescopeSubsystem extends SubsystemBase {
 
         motor.setIdleMode(IdleMode.kBrake);
         setName("name");
-        encoder.setPosition(0);
+        // motor.getEncoder().setPosition(0);
         ShuffleboardTab tab = Shuffleboard.getTab("Telescope Arm");
         // tab.addNumber(getName(), null)
         tab.addNumber("Motor position:", () -> {
-            return encoder.getPosition();
+            return motor.getEncoder().getPosition();
         });
         tab.addNumber("Motor target:", () -> {
             return targetLength;
@@ -53,6 +67,7 @@ public class TelescopeSubsystem extends SubsystemBase {
         tab.addNumber("Motor intput:", () -> {
             return motor.get();
         });
+        Shuffleboard.getTab("Telescope Arm").getLayout("Arm PID", BuiltInLayouts.kList).withPosition(8, 2) .withProperties(Map.of("Label Position", "HIDDEN")).withSize(2, 2).add(pid).withWidget(BuiltInWidgets.kPIDController);
 
     }
 
@@ -68,7 +83,7 @@ public class TelescopeSubsystem extends SubsystemBase {
 
     /** Convert Encoder Position Into Radians (encoder_position * 2 * pi) */
     public double getEncoderInRadians() {
-        return encoder.getPosition() * 2 * Math.PI;
+        return motor.getEncoder().getPosition() * 2 * Math.PI;
     }
 
     /**
@@ -131,25 +146,28 @@ public class TelescopeSubsystem extends SubsystemBase {
     // length of arm--Done
     // output of pid
 
+
+    public void setPosition(){
+        if (reset) {
+            if (m_limitSwitch.get()){
+                motor.set(-0.2);
+            }
+            else{
+                motor.set(0);
+                motor.getEncoder().setPosition(0);
+                reset = false;
+            }
+        }
+        else{
+            setpid(targetLength);
+        }
+    }
+
     @Override
     public void periodic() {
-
-        setpid(targetLength);
-        // if (!reset){
-        //     setpid(targetLength);
-        // }
-        // else{
-        //     motor.set(-0.1);
-
-        //     if (m_limitSwitch.get() == false) {
-        //         motor.set(0);
-        //         motor.getEncoder().setPosition(0);
-        //         reset = false;
-        //     }
-        // }   
-
-        // boolean state = m_limitSwitch.get(); // get the state of the switch
-        // System.out.println(state);
+        setPosition();
+        // System.out.println(motor.getEncoder().getPosition());
+        // System.out.println(m_limitSwitch.get());
     }
 
     @Override
