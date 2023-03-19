@@ -57,9 +57,9 @@ public class Constants {
       }
       
       public static final class RotationArmConstants{
-        public final static double ArmP = 2.0;
-        public final static double ArmI = 0.00;
-        public final static double ArmD = 0.00;
+        public final static double ArmP = 1.4;
+        public final static double ArmI = 0.025;
+        public final static double ArmD = 0.01;
 
         public final static int armMotorID = 9;
         public final static double ArmALength = 0.6477;

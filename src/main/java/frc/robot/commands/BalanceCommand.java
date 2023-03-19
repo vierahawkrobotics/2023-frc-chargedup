@@ -30,20 +30,15 @@ public class BalanceCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        System.out.println("Intialized");
     }
 
     @Override
     public void execute() {
-        System.out.println("executing");
-
         adjust = gyroPID.calculate(drive.m_gyro.getRoll(), 0);
         if (Math.abs(drive.m_gyro.getRoll()) < 2)
             adjust = 0;
         drive.setX();
         drive.drive(adjust, 0, 0, true);
-
-        System.out.println(gyroPID.getP());
     }
 
     @Override
