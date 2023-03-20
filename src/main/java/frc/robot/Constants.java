@@ -166,6 +166,14 @@ public class Constants {
         public static final double aprilTagThreshold = .2;
       }
 
+      public static final class XboxControllerButtonLayout {
+        public static final int A = 1;
+	      public static final int B = 2;
+	      public static final int X = 3;
+	      public static final int Y = 4;
+
+      }
+
       public static final class CandleConstants {
         public static final int CANdleID = 1;
         public static final int JoystickId = 0;

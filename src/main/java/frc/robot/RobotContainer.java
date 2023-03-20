@@ -26,6 +26,8 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import frc.robot.AutonmousCommands.AutoSetArmCommand;
+import frc.robot.AutonoumousRoutines.Middle;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -89,20 +91,23 @@ public class RobotContainer {
     // armSubsystem.setDefaultCommand(new SetArmToPoint(() -> {return
     // joystick.getLeftX() * 2;},() -> {return -joystick.getLeftY() * 2 +
     // Constants.armHeight;},telescopeSubsystem, armSubsystem));
-    new Trigger(joystickArm.povUp(new EventLoop()))
-        .onTrue(new JoystickArmStateCommand(1, armSubsystem, telescopeSubsystem));
-    new Trigger(joystickArm.povDown(new EventLoop()))
-        .onTrue(new JoystickArmStateCommand(-1, armSubsystem, telescopeSubsystem));
-    new JoystickButton(joystickArm, 1).onTrue(new SetClawCommand(ClawStates.Toggle, clawSubsystem));
+    
     
     new JoystickButton(joystick, 1).whileTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
-
     new JoystickButton(joystick, 2).whileTrue(new RepeatCommand(new BalanceCommand(m_robotDrive)));
     new JoystickButton(joystick, Button.kR1.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
 
+    new JoystickButton(joystickArm, Constants.XboxControllerButtonLayout.Y).onTrue(new SetArmStateCommand(Constants.ArmStates.Middle, armSubsystem, telescopeSubsystem));
+    new JoystickButton(joystickArm, Constants.XboxControllerButtonLayout.B).onTrue(new SetArmStateCommand(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
+    new JoystickButton(joystickArm, Constants.XboxControllerButtonLayout.A).onTrue(new SetClawCommand(ClawStates.Toggle, clawSubsystem));
+    
+    new Trigger(joystickArm.povUp(new EventLoop()))
+    .onTrue(new JoystickArmStateCommand(1, armSubsystem, telescopeSubsystem));
+    new Trigger(joystickArm.povDown(new EventLoop()))
+    .onTrue(new JoystickArmStateCommand(-1, armSubsystem, telescopeSubsystem));
     // new JoystickButton(joystick,
     // Constants.CandleConstants.BlockButton).whenPressed(ledSubsystems::setColors,
     // ledSubsystems);
@@ -120,79 +125,24 @@ public class RobotContainer {
             m_robotDrive));
   }
 
-  public Command getAutonomousCommand() {
-    HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("RaiseArmToHigh", new SetArmStateCommand(Constants.ArmStates.Middle, armSubsystem, telescopeSubsystem));
-    eventMap.put("RaiseArmToLow", new SetArmStateCommand(Constants.ArmStates.Low, armSubsystem, telescopeSubsystem));
-    eventMap.put("RaiseArmToMid", new SetArmStateCommand(Constants.ArmStates.Middle, armSubsystem, telescopeSubsystem));
-    eventMap.put("LowerArmToGround", new SetArmStateCommand(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
-    eventMap.put("OpenClaw", new SetClawCommand(ClawStates.Open, clawSubsystem));
-    eventMap.put("CloseClaw", new SetClawCommand(ClawStates.Closed, clawSubsystem));
-    eventMap.put("ToggleClaw", new SetClawCommand(ClawStates.Toggle, clawSubsystem));
-    eventMap.put("Wait", new WaitCommand(.5));
-    //eventMap.put("Balance", new BalanceCommand(m_robotDrive));
-
-    PathPlannerTrajectory TopBalance = PathPlanner.loadPath("TopBalance", new PathConstraints(4, 3));
-    HashMap<String, Command> topEventMap = new HashMap<>();
-    // topEventMap.put(null, getAutonomousCommand());
-
-    PathPlannerTrajectory TopPlace = PathPlanner.loadPath("TopPlace", new PathConstraints(1, .5));
-    HashMap<String, Command> topPlaceEventMap = new HashMap<>();
-
-    PathPlannerTrajectory MiddleBalance = PathPlanner.loadPath("MiddleBalance", new PathConstraints(.5, .5));
-    HashMap<String, Command> middleBalanceEventMap = new HashMap<>();
-
-    PathPlannerTrajectory BottomBalance = PathPlanner.loadPath("BottomBalance", new PathConstraints(1, .5));
-    HashMap<String, Command> bottomBalanceEventMap = new HashMap<>();
-
-    PathPlannerTrajectory BottomPlace = PathPlanner.loadPath("BottomPlace", new PathConstraints(1, .5));
-    HashMap<String, Command> bottomPlaceEventMap = new HashMap<>();
-
-    PathPlannerTrajectory Straight = PathPlanner.loadPath("Straight", new PathConstraints(1, .5));
-
-    PathPlannerTrajectory Simple = PathPlanner.loadPath("Simple", new PathConstraints(2, .5));
-
-    PathPlannerTrajectory Middle = PathPlanner.loadPath("Middle", new PathConstraints(2, 1));
-
-    PathPlannerTrajectory Sides = PathPlanner.loadPath("Sides", new PathConstraints(.5, .5));
-
-    PathPlannerTrajectory Bal = PathPlanner.loadPath("Bal", new PathConstraints(2,.5));
-
-
-    //PathPlannerTrajectory Fun = PathPlanner.loadPath("Fun", new PathConstraints(2,.5));
-
-    SwerveAutoBuilder swerveAutoBuilder = new SwerveAutoBuilder(
-        m_robotDrive::getPose,
-        m_robotDrive::resetOdometry,
-        DriveConstants.kDriveKinematics,
-        new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y
-                                         // PID controllers)
-        new PIDConstants(8, 0.0, 0.0),
-        m_robotDrive::setModuleStates,
-        eventMap,
-        true,
-        m_robotDrive);
-
-    Command FullAuto = swerveAutoBuilder.fullAuto(Bal);
-
-    // Run path following command, then stop at the end.
-    // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
-    // false));
-    return FullAuto;
+  public SequentialCommandGroup getAutonomousCommand(){
+    return new Middle(m_robotDrive);
   }
 
-  public SequentialCommandGroup BalanceGroup(boolean Balance){
-
-    if(Balance){
-      balanceSequence = new SequentialCommandGroup(
-      getAutonomousCommand(),
-      new RepeatCommand(new BalanceCommand(m_robotDrive))
-    );
-    } else{
-      balanceSequence = (SequentialCommandGroup)getAutonomousCommand();
-    }
   
-    return balanceSequence;
 
-  }
+  // public SequentialCommandGroup BalanceGroup(boolean Balance){
+
+  //   if(Balance){
+  //     balanceSequence = new SequentialCommandGroup(
+  //     getAutonomousCommand(),
+  //     new RepeatCommand(new BalanceCommand(m_robotDrive))
+  //   );
+  //   } else{
+  //     balanceSequence = (SequentialCommandGroup)getAutonomousCommand();
+  //   }
+  
+  //   return balanceSequence;
+
+  // }
 }

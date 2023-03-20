@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -15,7 +16,8 @@ import frc.robot.subsystems.TelescopeSubsystem;
 
 public class Robot extends TimedRobot {
 
-private Command m_autonomousCommand;
+  private Command m_autonomousCommand;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   private RobotContainer m_robotContainer;
 
@@ -35,7 +37,8 @@ private Command m_autonomousCommand;
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   @Override
   public void disabledExit() {
@@ -47,17 +50,18 @@ private Command m_autonomousCommand;
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.BalanceGroup(true);
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-    }    
+    }
   }
 
   @Override
-  public void autonomousPeriodic() { 
+  public void autonomousPeriodic() {
     m_autonomousCommand.execute();
   }
+
   @Override
   public void autonomousExit() {
     BalanceCommand.isFinished = true;
@@ -71,10 +75,12 @@ private Command m_autonomousCommand;
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+  }
 
   @Override
   public void testInit() {
@@ -82,8 +88,10 @@ private Command m_autonomousCommand;
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   @Override
-  public void testExit() {}
+  public void testExit() {
+  }
 }
