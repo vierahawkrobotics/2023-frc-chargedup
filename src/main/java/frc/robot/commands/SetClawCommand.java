@@ -1,13 +1,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.PneumaticClawSubsystem;
 import frc.robot.Constants;
 
 public class SetClawCommand extends CommandBase {
-    public ClawSubsystem claw_subsystem;
+    public PneumaticClawSubsystem claw_subsystem;
     public Constants.ClawStates m_state;
-    public SetClawCommand(Constants.ClawStates state, ClawSubsystem ClawSubsystem) {
+    public SetClawCommand(Constants.ClawStates state, PneumaticClawSubsystem ClawSubsystem) {
         this.claw_subsystem = ClawSubsystem;
         addRequirements(claw_subsystem);
         m_state = state;

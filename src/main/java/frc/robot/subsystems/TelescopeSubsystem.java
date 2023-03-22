@@ -31,7 +31,7 @@ public class TelescopeSubsystem extends SubsystemBase {
     /** Create Variables: Motor, Encoder, PID */
     final CANSparkMax motor = new CANSparkMax(Constants.TelescopeArmConstants.scopeMotorID, MotorType.kBrushless);
     // RelativeEncoder encoder = motor.getEncoder();
-    public final PIDController pid = new PIDController(Constants.TelescopeArmConstants.ScopeP,
+    public final PIDController telePID = new PIDController(Constants.TelescopeArmConstants.ScopeP,
             Constants.TelescopeArmConstants.ScopeI, Constants.TelescopeArmConstants.ScopeD);
 
     static double targetLength = 0;
@@ -40,11 +40,9 @@ public class TelescopeSubsystem extends SubsystemBase {
 
     static boolean reset;
 
-    
-
     public TelescopeSubsystem() {
-        
-        pid.setIntegratorRange(-1, 1);
+
+        telePID.setIntegratorRange(-1, 1);
         m_limitSwitch = new DigitalInput(3);
 
         motor.setIdleMode(IdleMode.kBrake);
@@ -58,16 +56,15 @@ public class TelescopeSubsystem extends SubsystemBase {
         tab.addNumber("Motor target:", () -> {
             return targetLength;
         });
-        tab.addNumber("Motor Height:", () -> {
-            return ArmSubsystem.getTotalHeightFromSecondaryArm(getRadiansToLength(getEncoderInRadians()));
-        });
         tab.addNumber("Length of Arm:", () -> {
             return getRadiansToLength(getEncoderInRadians());
         });
         tab.addNumber("Motor intput:", () -> {
             return motor.get();
         });
-        Shuffleboard.getTab("Telescope Arm").getLayout("Arm PID", BuiltInLayouts.kList).withPosition(8, 2) .withProperties(Map.of("Label Position", "HIDDEN")).withSize(2, 2).add(pid).withWidget(BuiltInWidgets.kPIDController);
+        Shuffleboard.getTab("Telescope Arm").getLayout("Arm PID", BuiltInLayouts.kList).withPosition(8, 2)
+                .withProperties(Map.of("Label Position", "HIDDEN")).withSize(2, 2).add(telePID)
+                .withWidget(BuiltInWidgets.kPIDController);
 
     }
 
@@ -95,8 +92,8 @@ public class TelescopeSubsystem extends SubsystemBase {
     }
 
     /** Using A PID, Calculate The Encoder Position And Create A Certain Setpoint */
-    void setpid(double setpoint) {
-        setpoint = pid.calculate(getCurrentArmLength(), setpoint);
+    void updatePID() {
+        double setpoint = telePID.calculate(getCurrentArmLength(), targetLength);
         if (setpoint < 0.01 && setpoint > -0.01)
             setpoint = 0;
         if (setpoint > 0.3)
@@ -106,18 +103,8 @@ public class TelescopeSubsystem extends SubsystemBase {
         motor.set(setpoint);
     }
 
-    double MaxLengthValue() {
-        if (ArmSubsystem.getTargetRadian() > 1.4)
-            return Constants.TelescopeArmConstants.ArmBLength;
-
-        return Constants.TelescopeArmConstants.ArmBLength * Math.min(Math.max(
-                ((Constants.clawLength + Constants.armHeight) / Math.cos(ArmSubsystem.getTargetRadian())
-                        - Constants.RotationArmConstants.ArmALength) / Constants.TelescopeArmConstants.ArmBLength,
-                0), 1);
-    }
-
-    public void setLength(double v) {
-        targetLength = Math.min(Math.max(v, 0), MaxLengthValue());
+    public void setLength(double length){
+        targetLength = length;
     }
 
     public void setLength(Constants.ArmStates mState) {
@@ -141,37 +128,26 @@ public class TelescopeSubsystem extends SubsystemBase {
         }
         targetLength = target;
     }
-    // motor position(rotation)--Done
-    // motor height
-    // length of arm--Done
-    // output of pid
 
-
-    public void setPosition(){
+    public void setPosition() {
         if (reset) {
-            if (m_limitSwitch.get()){
+            if (m_limitSwitch.get()) {
                 motor.set(-0.2);
-            }
-            else{
+            } else {
                 motor.set(0);
                 motor.getEncoder().setPosition(0);
                 reset = false;
             }
-        }
-        else{
-            setpid(targetLength);
+        } else {
+            updatePID();
         }
     }
 
     @Override
     public void periodic() {
-        setPosition();
-        // System.out.println(motor.getEncoder().getPosition());
-        // System.out.println(m_limitSwitch.get());
     }
 
     @Override
     public void simulationPeriodic() {
-
     }
 }

@@ -14,7 +14,7 @@ public class JoystickArmStateCommand extends CommandBase {
 
     public static Constants.ArmStates currentState = Constants.ArmStates.Ground;
 
-    public JoystickArmStateCommand(int state, ArmSubsystem arm, TelescopeSubsystem telescope ) {
+    public JoystickArmStateCommand(int state, ArmSubsystem arm, TelescopeSubsystem telescope) {
         this.arm = arm;
         this.telescope = telescope;
         this.state = state;
@@ -22,9 +22,9 @@ public class JoystickArmStateCommand extends CommandBase {
         addRequirements(this.telescope);
     }
 
-    void armUp(){
+    void armUp() {
 
-        switch(currentState) {
+        switch (currentState) {
             case High:
                 return;
             case Middle:
@@ -39,11 +39,12 @@ public class JoystickArmStateCommand extends CommandBase {
             case Ground:
                 currentState = Constants.ArmStates.Collect;
                 return;
-        }      
+        }
     }
-    void armDown(){
-       
-        switch(currentState) {
+
+    void armDown() {
+
+        switch (currentState) {
             case Ground:
                 return;
             case Collect:
@@ -70,13 +71,13 @@ public class JoystickArmStateCommand extends CommandBase {
     public void execute() {
         if (state == 1) {
             armUp();
-        }  
+        }
 
         else if (state == -1) {
             armDown();
         }
-        
-        arm.setRadian(currentState);
+
+        arm.setTargetRadianUsingState(currentState);
         telescope.setLength(currentState);
     }
 
