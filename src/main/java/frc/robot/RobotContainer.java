@@ -114,7 +114,7 @@ public class RobotContainer {
             m_robotDrive));
 
     armSubsystem.setDefaultCommand(
-        new RunCommand(() -> armSubsystem.updatePID(MathUtil.clamp(joystick.getLeftY(),
+        new RunCommand(() -> armSubsystem.updatePID(MathUtil.clamp(joystickArm.getLeftY(),
             -Constants.RotationArmConstants.angleAdjustmentRange, Constants.RotationArmConstants.angleAdjustmentRange)),
             armSubsystem));
 
