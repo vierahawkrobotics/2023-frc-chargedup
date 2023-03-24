@@ -307,7 +307,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     yawWidget = Shuffleboard.getTab("Main").getLayout("Attitude", BuiltInLayouts.kList).withPosition(0, 2 ) .withSize(1, 2).withProperties(Map.of("Label Position", "TOP")).add("Yaw", 0).getEntry();
     pitchWidget = Shuffleboard.getTab("Main").getLayout("Attitude", BuiltInLayouts.kList).add("Pitch", 0).getEntry();
-    rollWidget = Shuffleboard.getTab("Main").getLayout("Attitude", BuiltInLayouts.kList).add("Roll", 0).getEntry();
+    rollWidget = Shuffleboard.getTab("Main").getLayout(
+      "Attitude", BuiltInLayouts.kList).add("Roll", 0).getEntry();
 
     xPowerWidget = Shuffleboard.getTab("Main").getLayout("Throttle", BuiltInLayouts.kList).withPosition(0, 0).withSize(1, 2).withProperties(Map.of("Label Position", "LEFT")).add("X" , 0).getEntry();
     yPowerWidget = Shuffleboard.getTab("Main").getLayout("Throttle", BuiltInLayouts.kList).add("Y" , 0).getEntry();

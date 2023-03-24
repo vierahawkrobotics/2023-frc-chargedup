@@ -16,6 +16,7 @@ import frc.robot.AutonmousCommands.AutoSetArmCommandLow;
 import frc.robot.Constants.ClawStates;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.CollectCommand;
+import frc.robot.commands.DepositCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
@@ -40,6 +41,7 @@ public class Autonomous {
         eventMap.put("RaiseArmToHigh", new AutoSetArmCommandHigh(Constants.ArmStates.High, armSubsystem, telescopeSubsystem));
         eventMap.put("LowerArmToGround", new AutoSetArmCommandLow(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
         eventMap.put("Collect", new CollectCommand(clawSubsystem));
+        eventMap.put("Deposit", new DepositCommand(clawSubsystem));
 
         SwerveAutoBuilder swerveAutoBuilder = new SwerveAutoBuilder(
                 drive::getPose,

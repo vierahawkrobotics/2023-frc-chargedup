@@ -17,7 +17,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
 import frc.robot.subsystems.motorClawSubsystem;
 
-public class Middle extends SequentialCommandGroup {
+public class MaxMiddle extends SequentialCommandGroup {
     PathPlannerTrajectory Middle;
     DriveSubsystem drive;
     ArmSubsystem armSubsystem;
@@ -25,7 +25,7 @@ public class Middle extends SequentialCommandGroup {
     motorClawSubsystem clawSubsystem;
     Autonomous auto;
 
-    public Middle(DriveSubsystem drive, ArmSubsystem armSubsystem, TelescopeSubsystem telescopeSubsystem,motorClawSubsystem clawSubsystem) {
+    public MaxMiddle(DriveSubsystem drive, ArmSubsystem armSubsystem, TelescopeSubsystem telescopeSubsystem,motorClawSubsystem clawSubsystem) {
         this.drive = drive;
         this.armSubsystem = armSubsystem;
         this.telescopeSubsystem = telescopeSubsystem;
@@ -33,9 +33,12 @@ public class Middle extends SequentialCommandGroup {
         auto = new Autonomous(drive, armSubsystem, telescopeSubsystem, clawSubsystem);
 
         PathPoint startPoint = new PathPoint(new Translation2d(2.55, 3.23), new Rotation2d(0), new Rotation2d(180));
-        PathPoint firstWayPathPoint = new PathPoint(new Translation2d(1.79, 3.23), new Rotation2d(0),
+        PathPoint firstWayPathPoint = new PathPoint(new Translation2d(1.75, 3.23), new Rotation2d(0),
                 new Rotation2d(180));
-        PathPoint secondWayPathPoint = new PathPoint(new Translation2d(2.45, 3.23), new Rotation2d(0),
+        PathPoint secondWayPathPoint = new PathPoint(new Translation2d(2.36, 3.23), new Rotation2d(0),
+                new Rotation2d(180));
+
+        PathPoint thirdWayPathPoint = new PathPoint(new Translation2d(5.5, 3.23), new Rotation2d(0),
                 new Rotation2d(180));
         PathPoint endPoint = new PathPoint(new Translation2d(3.9, 3.23), new Rotation2d(0), new Rotation2d(180));
 
@@ -50,8 +53,14 @@ public class Middle extends SequentialCommandGroup {
                 secondWayPathPoint);
 
         PathPlannerTrajectory thirdPath = PathPlanner.generatePath(
-                new PathConstraints(2, 1),
+                new PathConstraints(1, 1),
                 secondWayPathPoint,
+                thirdWayPathPoint
+        );
+
+        PathPlannerTrajectory fourthPath = PathPlanner.generatePath(
+                new PathConstraints(2, 1),
+                thirdWayPathPoint,
                 endPoint);
 
         addCommands(
@@ -64,6 +73,7 @@ public class Middle extends SequentialCommandGroup {
                 new SetArmStateCommand(ArmStates.Ground, armSubsystem, telescopeSubsystem),
                 new WaitCommand(.5),
                 auto.getAutoPath(thirdPath),
+                auto.getAutoPath(fourthPath),
                 new BalanceCommand(drive)
                 
         );

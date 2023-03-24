@@ -77,11 +77,11 @@ public class RobotContainer {
   XboxController joystickArm;
   XboxController joystick;
   SequentialCommandGroup balanceSequence;
-  private final SendableChooser<SequentialCommandGroup> m_chooser = new SendableChooser<>();
+  private final SendableChooser<SequentialCommandGroup> m_chooser;
   
-  private SequentialCommandGroup SideAuto;
-  private SequentialCommandGroup MiddleBalance;
-  private SequentialCommandGroup Bal;
+  private SideAutoRoutine SideAuto;
+  private Middle MiddleBalance;
+  private Bal bal;
   
 
   public RobotContainer() {
@@ -96,9 +96,10 @@ public class RobotContainer {
 
     SideAuto = new SideAutoRoutine(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
     MiddleBalance = new Middle(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
-    Bal = new Bal(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
+    bal = new Bal(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
 
-    m_chooser.setDefaultOption("Back Out", Bal);
+    m_chooser = new SendableChooser<>();
+    m_chooser.setDefaultOption("Back Out", bal);
     m_chooser.addOption("Side Auto Routine", SideAuto);
     m_chooser.addOption("Middle Balance", MiddleBalance);
     SmartDashboard.putData(m_chooser);
