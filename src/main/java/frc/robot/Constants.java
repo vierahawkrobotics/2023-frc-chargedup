@@ -68,7 +68,7 @@ public class Constants {
     public final static double highGoalRadian = 1.95;
     public final static double groundGoalRadian = 0;
 
-    public final static double angleAdjustmentRange = Math.toRadians(5);
+    public final static double angleAdjustmentRange = Math.toRadians(10);
   }
 
   public static class DriveConstants {
@@ -164,7 +164,8 @@ public class Constants {
   }
 
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final int DriverControllerPort = 0;
+    public static final int OperatorControllerPort = 1;
   }
 
   public static final class LemonlightConstants {
@@ -184,6 +185,17 @@ public class Constants {
     public static final int V5Button = XboxController.Button.kB.value;
     public static final int CurrentButton = XboxController.Button.kX.value;
     public static final int TemperatureButton = XboxController.Button.kY.value;
+  }
+
+  public static final class motorClawSubsystemConstants{
+    public static final int clawMotorID = 13;
+    public static double clawP = 0;
+    public static double clawI = 0;
+    public static double clawD = 0;
+
+    public static double collectionSpeed = 100;
+    public static double depositSpeed = -100;
+
   }
 
   public static final class AutoConstants {

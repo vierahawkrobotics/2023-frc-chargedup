@@ -1,7 +1,10 @@
 package frc.robot.commands;
 
+import java.lang.invoke.ConstantBootstraps;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.motorClawSubsystem;
 
 public class DepositCommand extends CommandBase {
@@ -19,7 +22,7 @@ public class DepositCommand extends CommandBase {
 
     @Override
     public void execute() {
-        claw.setTargetSpeed(-1000);       
+        claw.setTargetSpeed(Constants.motorClawSubsystemConstants.depositSpeed);       
     }
 
     @Override

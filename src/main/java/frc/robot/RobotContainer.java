@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
@@ -49,12 +50,16 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 //import java.util.function.Supplier;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotContainer {
   ArmSubsystem armSubsystem;
   motorClawSubsystem clawSubsystem;
   TelescopeSubsystem telescopeSubsystem;
   CANdleSystem candleSubsystem;
+
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   Lemonlight lemonlight;
   LEDSubsystems ledSubsystems;
@@ -73,6 +78,8 @@ public class RobotContainer {
     candleSubsystem = new CANdleSystem();
 
     clawSubsystem = new motorClawSubsystem();
+
+    SmartDashboard.putData(m_chooser);
 
     configureBindings();
   }
