@@ -42,16 +42,24 @@ public class motorClawSubsystem extends SubsystemBase {
         return clawMotor.getEncoder().getVelocity();
     }
 
-    public void updatePID(boolean collect, boolean deposit) {
+    public void updatePID(boolean collectCube, boolean depositCube, boolean collectCone, boolean depositCone) {
 
         double input = -0.05;
         
-        if(collect){
+        if(collectCube){
             input = -0.3;
         }
 
-        if(deposit){
+        if(depositCube){
             input = 0.2;
+        }
+
+        if (collectCone){
+            input = -0.5;
+        }
+
+        if (depositCone){
+            input = 0.3;
         }
        
         clawMotor.set(input);

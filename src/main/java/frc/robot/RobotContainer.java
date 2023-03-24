@@ -124,7 +124,7 @@ public class RobotContainer {
         new RunCommand(() -> telescopeSubsystem.setPosition(), telescopeSubsystem));
 
     clawSubsystem.setDefaultCommand(
-        new RunCommand(() -> clawSubsystem.updatePID(joystickArm.getAButton(), joystickArm.getBButton()), clawSubsystem));
+        new RunCommand(() -> clawSubsystem.updatePID(joystickArm.getAButton(), joystickArm.getBButton(), joystickArm.getYButton(), joystickArm.getXButton()), clawSubsystem));
 
 
   }
