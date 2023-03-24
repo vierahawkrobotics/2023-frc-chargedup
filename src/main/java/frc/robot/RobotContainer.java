@@ -26,8 +26,13 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
-import frc.robot.AutonmousCommands.AutoSetArmCommand;
+import frc.robot.AutonmousCommands.AutoSetArmCommandHigh;
+import frc.robot.AutonmousCommands.AutoSetArmCommandLow;
+import frc.robot.AutonoumousRoutines.Autonomous;
+import frc.robot.AutonoumousRoutines.Bal;
 import frc.robot.AutonoumousRoutines.Middle;
+import frc.robot.AutonoumousRoutines.SideAutoRoutine;
+import frc.robot.Constants.ArmStates;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -45,19 +50,23 @@ import javax.swing.text.AbstractDocument.LeafElement;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 //import java.util.function.Supplier;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotContainer {
   ArmSubsystem armSubsystem;
   ClawSubsystem clawSubsystem;
   TelescopeSubsystem telescopeSubsystem;
   CANdleSystem candleSubsystem;
+  Autonomous auto;
 
   Lemonlight lemonlight;
   LEDSubsystems ledSubsystems;
@@ -65,6 +74,12 @@ public class RobotContainer {
   XboxController joystickArm;
   XboxController joystick;
   SequentialCommandGroup balanceSequence;
+  private final SendableChooser<SequentialCommandGroup> m_chooser = new SendableChooser<>();
+  
+  private SequentialCommandGroup SideAuto;
+  private SequentialCommandGroup MiddleBalance;
+  private SequentialCommandGroup Bal;
+  
 
   public RobotContainer() {
     joystickArm = new XboxController(1);
@@ -74,7 +89,17 @@ public class RobotContainer {
     clawSubsystem = new ClawSubsystem();
     telescopeSubsystem = new TelescopeSubsystem();
     candleSubsystem = new CANdleSystem();
+    auto = new Autonomous(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
 
+    SideAuto = new SideAutoRoutine(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
+    MiddleBalance = new Middle(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
+    Bal = new Bal(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
+
+    m_chooser.setDefaultOption("Back Out", Bal);
+    m_chooser.addOption("Side Auto Routine", SideAuto);
+    m_chooser.addOption("Middle Balance", MiddleBalance);
+    SmartDashboard.putData(m_chooser);
+  
     configureBindings();
   }
 
@@ -126,8 +151,64 @@ public class RobotContainer {
   }
 
   public SequentialCommandGroup getAutonomousCommand(){
-    return new Middle(m_robotDrive);
+    return m_chooser.getSelected();
   }
+
+  // public Command getAutonomousCommand() {
+  //   HashMap<String, Command> eventMap = new HashMap<>();
+  //   eventMap.put("RaiseArmToHigh", new AutoSetArmCommandHigh(Constants.ArmStates.High, armSubsystem, telescopeSubsystem));
+  //   eventMap.put("LowerArmToGround", new AutoSetArmCommandLow(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
+  //   eventMap.put("ToggleClaw", new SetClawCommand(ClawStates.Toggle, clawSubsystem));
+  //  // eventMap.put("Wait", new WaitCommand(.5));
+  //   //eventMap.put("Balance", new BalanceCommand(m_robotDrive));
+
+  //   PathPlannerTrajectory TopBalance = PathPlanner.loadPath("TopBalance", new PathConstraints(4, 3));
+  //   HashMap<String, Command> topEventMap = new HashMap<>();
+  //   // topEventMap.put(null, getAutonomousCommand());
+
+  //   PathPlannerTrajectory TopPlace = PathPlanner.loadPath("TopPlace", new PathConstraints(1, .5));
+  //   HashMap<String, Command> topPlaceEventMap = new HashMap<>();
+
+  //   PathPlannerTrajectory MiddleBalance = PathPlanner.loadPath("MiddleBalance", new PathConstraints(.5, .5));
+  //   HashMap<String, Command> middleBalanceEventMap = new HashMap<>();
+
+  //   PathPlannerTrajectory BottomBalance = PathPlanner.loadPath("BottomBalance", new PathConstraints(1, .5));
+  //   HashMap<String, Command> bottomBalanceEventMap = new HashMap<>();
+
+  //   PathPlannerTrajectory BottomPlace = PathPlanner.loadPath("BottomPlace", new PathConstraints(1, .5));
+  //   HashMap<String, Command> bottomPlaceEventMap = new HashMap<>();
+
+  //   PathPlannerTrajectory Straight = PathPlanner.loadPath("Straight", new PathConstraints(1, .5));
+
+  //   PathPlannerTrajectory Simple = PathPlanner.loadPath("Simple", new PathConstraints(2, .5));
+
+  //   PathPlannerTrajectory Middle = PathPlanner.loadPath("Middle", new PathConstraints(2, 1));
+
+  //   PathPlannerTrajectory Bal = PathPlanner.loadPath("Bal", new PathConstraints(2,.5));
+
+
+  //   //PathPlannerTrajectory Fun = PathPlanner.loadPath("Fun", new PathConstraints(2,.5));
+
+  //   SwerveAutoBuilder swerveAutoBuilder = new SwerveAutoBuilder(
+  //       m_robotDrive::getPose,
+  //       m_robotDrive::resetOdometry,
+  //       DriveConstants.kDriveKinematics,
+  //       new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y
+  //                                        // PID controllers)
+  //       new PIDConstants(8, 0.0, 0.0),
+  //       m_robotDrive::setModuleStates,
+  //       eventMap,
+  //       true,
+  //       m_robotDrive);
+
+  //   Command FullAuto = swerveAutoBuilder.fullAuto(Middle);
+
+  //   // Run path following command, then stop at the end.
+  //   // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
+  //   // false));
+  //   return FullAuto;
+  // }
+
 
   
 
@@ -145,4 +226,60 @@ public class RobotContainer {
   //   return balanceSequence;
 
   // }
+
+
+  // public SequentialCommandGroup MiddleBalance (){
+  //   PathPoint startPoint = new PathPoint(new Translation2d(2.55, 3.23), new Rotation2d(0), new Rotation2d(180));
+  //   PathPoint firstWayPathPoint = new PathPoint(new Translation2d(1.75, 3.23), new Rotation2d(0), new Rotation2d(180));
+  //   PathPoint secondWayPathPoint = new PathPoint(new Translation2d(2.36, 3.23), new Rotation2d(0), new Rotation2d(180));
+  //   PathPoint endPoint = new PathPoint(new Translation2d(3.9, 3.23), new Rotation2d(0), new Rotation2d(180));
+
+  //   PathPlannerTrajectory firstPath = PathPlanner.generatePath(
+  //     new PathConstraints(2, 1),
+  //     startPoint, 
+  //     firstWayPathPoint
+  //   );
+
+  //   PathPlannerTrajectory secondPath = PathPlanner.generatePath(
+  //     new PathConstraints(2, 1),
+  //     firstWayPathPoint, 
+  //     secondWayPathPoint
+  //   );
+
+  //   PathPlannerTrajectory thirdPath = PathPlanner.generatePath(
+  //     new PathConstraints(2, 1),
+  //     secondWayPathPoint, 
+  //     endPoint
+  //   );
+
+  //   MiddleBalance = new SequentialCommandGroup(
+  //     new SetArmStateCommand(ArmStates.High, armSubsystem, telescopeSubsystem),
+  //     new WaitCommand(.2),
+  //     auto.getAutoPath(firstPath),
+  //     //new SetClawCommand(ClawStates.Toggle, clawSubsystem),
+  //     new WaitCommand(.2),
+  //     auto.getAutoPath(secondPath),
+  //     new SetArmStateCommand(ArmStates.Ground, armSubsystem, telescopeSubsystem),
+  //     new WaitCommand(.5),
+  //     auto.getAutoPath(thirdPath),
+  //     new BalanceCommand(m_robotDrive)
+  //   );
+
+  //   return MiddleBalance;
+
+  // }
+
+  // public SequentialCommandGroup middleBalance(){
+  //   return new Middle(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
+  // }
+
+  // public SequentialCommandGroup Bal(){
+  //   return new Bal(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
+  // }
+
+  // public SequentialCommandGroup Sides(){
+  //   return new SideAutoRoutinfe(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
+  // }
+
+
 }

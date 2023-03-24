@@ -48,6 +48,10 @@ public class ClawSubsystem extends SubsystemBase {
         clawStateEntry.setString(updateMessage);   
     }
 
+    public DoubleSolenoid.Value getClawState(){
+        return solenoid1.get();
+    }
+
     @Override
     public void simulationPeriodic() {
 

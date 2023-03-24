@@ -19,7 +19,7 @@ public class Bal extends SequentialCommandGroup {
     ClawSubsystem clawSubsystem;
     Autonomous auto;
     
-    public Bal(DriveSubsystem drive) {
+    public Bal(DriveSubsystem drive, ArmSubsystem armSub, TelescopeSubsystem telescopeSubsystem, ClawSubsystem clawSubsystem) {
         this.drive = drive;
         auto = new Autonomous(drive, armSubsystem, telescopeSubsystem, clawSubsystem);
         

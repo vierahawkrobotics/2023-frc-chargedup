@@ -28,11 +28,9 @@ public class OnTheFlyPathGen extends CommandBase {
     AutoConstants autoConstants = new AutoConstants();
 
 
-    public OnTheFlyPathGen(DriveSubsystem drive, Lemonlight lemonlight, PathPoint pathPoint) {
-        this.drive = drive;
-        this.lemonlight = lemonlight;
-        this.chosePathPoint = pathPoint;
-        //this.aprilTagID = lemonlight.getAprilTagID;
+    public OnTheFlyPathGen(PathPoint currentPathPoint, PathPoint chosePathPoint) {
+        this.currentPathPoint = currentPathPoint;
+        this.chosePathPoint = chosePathPoint;
         addRequirements(drive);
 
     }
@@ -41,14 +39,13 @@ public class OnTheFlyPathGen extends CommandBase {
     @Override
     public void initialize() {
         drive.drive(0, 0, 0, true);
-       // currentPathPoint = new PathPoint(lemonlight.getTranslation2D(), new Rotation2d(drive.getHeading()), lemonlight.getRobotPose().getTranslation().getZ());
-
+        
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        //drive.pathGeneration(currentPathPoint, chosePathPoint);
+       // generate(currentPathPoint, chosePathPoint);
         
     }
 

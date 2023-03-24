@@ -74,7 +74,7 @@ public class TeleOpPlacement extends SequentialCommandGroup {
 
 
         addCommands(
-            new OnTheFlyPathGen(drive, lemonLight, getRoutine(Path)),
+            //new OnTheFlyPathGen(drive, lemonLight, getRoutine(Path)),
             getArmSubCommand(Path)
         );
         

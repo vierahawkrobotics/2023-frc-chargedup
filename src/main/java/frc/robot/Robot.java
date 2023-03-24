@@ -4,22 +4,31 @@
 
 package frc.robot;
 
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.AutonoumousRoutines.Middle;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
 
 public class Robot extends TimedRobot {
 
-  private Command m_autonomousCommand;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
   private RobotContainer m_robotContainer;
+
+  private Command m_autonomousCommand;
+ 
+
+  private String m_selectedAuto;
+
+
 
   @Override
   public void robotInit() {
@@ -50,6 +59,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    //m_autonomousCommand = m_robotContainer.middleBalance();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -87,11 +97,4 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
   }
 
-  @Override
-  public void testPeriodic() {
-  }
-
-  @Override
-  public void testExit() {
-  }
 }
