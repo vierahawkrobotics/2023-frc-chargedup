@@ -104,11 +104,6 @@ public class RobotContainer {
     .whileTrue(new RunCommand(
       () -> m_robotDrive.setX(),
       m_robotDrive));
-      
-    new JoystickButton(joystickArm, 1).whileTrue(new RepeatCommand(new DepositCommand(clawSubsystem)));
-    new JoystickButton(joystickArm, 2).onTrue(new CollectCommand(clawSubsystem));
-
-    
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -129,7 +124,8 @@ public class RobotContainer {
         new RunCommand(() -> telescopeSubsystem.setPosition(), telescopeSubsystem));
 
     clawSubsystem.setDefaultCommand(
-        new RunCommand(() -> clawSubsystem.updatePID(), clawSubsystem));
+        new RunCommand(() -> clawSubsystem.updatePID(joystickArm.getAButton(), joystickArm.getBButton()), clawSubsystem));
+
 
   }
 

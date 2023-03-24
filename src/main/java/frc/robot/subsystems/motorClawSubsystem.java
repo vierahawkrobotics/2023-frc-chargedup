@@ -40,22 +40,32 @@ public class motorClawSubsystem extends SubsystemBase {
         return clawMotor.getEncoder().getVelocity();
     }
 
-    public void updatePID() {
-        double input = clawPID.calculate(getMotorVelocity(), targetRotationalSpeed);
-        if (Math.abs(input) < 0.05)
-            input = 0;
-        targetRotationalSpeed = 0;
+    public void updatePID(boolean collect, boolean deposit) {
+        // double input = clawPID.calculate(getMotorVelocity(), targetRotationalSpeed);
+        // if (Math.abs(input) < 0.05)
+        //     input = 0;
+        // targetRotationalSpeed = 0;
 
-        if (clawMotor.getOutputCurrent() > 10) {
-            input = 0;
-            isStalled = true;
-            targetRotationalSpeed = 0;
+        // if (clawMotor.getOutputCurrent() > 10) {
+        //     input = 0;
+        //     isStalled = true;
+        //     targetRotationalSpeed = 0;
+        // }
+
+        // if (clawMotor.getMotorTemperature() > 100)
+        //     input = 0;
+        // targetRotationalSpeed = 0;
+
+        double input = 0.1;
+        
+        if(collect){
+            input = 0.2;
         }
 
-        if (clawMotor.getMotorTemperature() > 100)
-            input = 0;
-        targetRotationalSpeed = 0;
-
+        if(deposit){
+            input = -0.2;
+        }
+       
         clawMotor.set(input);
     }
 
