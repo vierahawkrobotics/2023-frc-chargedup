@@ -39,7 +39,7 @@ public class Constants {
 
   public static final class TelescopeArmConstants {
     public final static double ScopeP = 4;
-    public final static double ScopeI = 0.02;
+    public final static double ScopeI = 0.00;
     public final static double ScopeD = 0;
 
     public final static int scopeMotorID = 10;
@@ -49,7 +49,7 @@ public class Constants {
                                                                                                // 27
 
     public final static double groundGoalTeleLength = 0.015 * ArmBLength;
-    public final static double lowGoalTeleLength = 0.015 * ArmBLength;
+    public final static double lowGoalTeleLength = Units.inchesToMeters(7);;
     public final static double collectGoalTeleLength = Units.inchesToMeters(7);
     public final static double middleGoalTeleLength = .60 * ArmBLength;
     public final static double highGoalTeleLength = 1 * ArmBLength;
@@ -57,13 +57,13 @@ public class Constants {
 
   public static final class RotationArmConstants {
     public final static double ArmP = 1.4;
-    public final static double ArmI = 0.025;
-    public final static double ArmD = 0.01;
+    public final static double ArmI = 0.00;
+    public final static double ArmD = 0.001;
 
     public final static int armMotorID = 9;
     public final static double ArmALength = 0.6477;
 
-    public final static double lowGoalRadian = 0.5;
+    public final static double lowGoalRadian = 0.3;
     public final static double middleGoalRadian = 1.58;
     public final static double highGoalRadian = 1.95;
     public final static double groundGoalRadian = 0;

@@ -58,10 +58,10 @@ public class motorClawSubsystem extends SubsystemBase {
         //     input = 0;
         // targetRotationalSpeed = 0;
 
-        double input = -0.1;
+        double input = -0.05;
         
         if(collect){
-            input = -0.5;
+            input = -0.3;
         }
 
         if(deposit){
