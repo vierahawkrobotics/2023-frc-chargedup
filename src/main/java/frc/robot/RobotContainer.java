@@ -28,8 +28,8 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
-import frc.robot.AutonmousCommands.AutoSetArmCommandHigh;
-import frc.robot.AutonmousCommands.AutoSetArmCommandLow;
+// import frc.robot.AutonmousCommands.AutoSetArmCommandHigh;
+// import frc.robot.AutonmousCommands.AutoSetArmCommandLow;
 import frc.robot.AutonoumousRoutines.Autonomous;
 import frc.robot.AutonoumousRoutines.Bal;
 import frc.robot.AutonoumousRoutines.Middle;
@@ -77,11 +77,11 @@ public class RobotContainer {
   XboxController joystickArm;
   XboxController joystick;
   SequentialCommandGroup balanceSequence;
-  private final SendableChooser<SequentialCommandGroup> m_chooser;
+  //private final SendableChooser<SequentialCommandGroup> m_chooser;
   
-  private SideAutoRoutine SideAuto;
-  private Middle MiddleBalance;
-  private Bal bal;
+  // private SideAutoRoutine SideAuto;
+  // private Middle MiddleBalance;
+  // private Bal bal;
   
 
   public RobotContainer() {
@@ -94,15 +94,15 @@ public class RobotContainer {
     candleSubsystem = new CANdleSystem();
     auto = new Autonomous(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
 
-    SideAuto = new SideAutoRoutine(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
-    MiddleBalance = new Middle(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
-    bal = new Bal(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
+    // SideAuto = new SideAutoRoutine(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
+    // MiddleBalance = new Middle(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
+    // bal = new Bal(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
 
-    m_chooser = new SendableChooser<>();
-    m_chooser.setDefaultOption("Back Out", bal);
-    m_chooser.addOption("Side Auto Routine", SideAuto);
-    m_chooser.addOption("Middle Balance", MiddleBalance);
-    SmartDashboard.putData(m_chooser);
+    // m_chooser = new SendableChooser<>();
+    // m_chooser.setDefaultOption("Back Out", bal);
+    // m_chooser.addOption("Side Auto Routine", SideAuto);
+    // m_chooser.addOption("Middle Balance", MiddleBalance);
+    //SmartDashboard.putData(m_chooser);
   
 
     configureBindings();
@@ -137,8 +137,8 @@ public class RobotContainer {
       () -> m_robotDrive.setX(),
       m_robotDrive));
       
-    new JoystickButton(joystickArm, 1).whileTrue(new RepeatCommand(new DepositCommand(clawSubsystem)));
-    new JoystickButton(joystickArm, 2).onTrue(new CollectCommand(clawSubsystem));
+    // new JoystickButton(joystickArm, 1).whileTrue(new RepeatCommand(new DepositCommand(clawSubsystem)));
+    // new JoystickButton(joystickArm, 2).onTrue(new CollectCommand(clawSubsystem));
 
     // new JoystickButton(joystickArm, Constants.XboxControllerButtonLayout.Y).onTrue(new SetArmStateCommand(Constants.ArmStates.Middle, armSubsystem, telescopeSubsystem));
     // new JoystickButton(joystickArm, Constants.XboxControllerButtonLayout.B).onTrue(new SetArmStateCommand(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
@@ -171,87 +171,91 @@ public class RobotContainer {
     telescopeSubsystem.setDefaultCommand(
         new RunCommand(() -> telescopeSubsystem.setPosition(), telescopeSubsystem));
 
-    clawSubsystem.setDefaultCommand(
-        new RunCommand(() -> clawSubsystem.updatePID(), clawSubsystem));
+    // clawSubsystem.setDefaultCommand(
+    //     new RunCommand(() -> clawSubsystem.updatePID(), clawSubsystem));
 
   }
 
-  public SequentialCommandGroup getAutonomousCommand(){
-    return m_chooser.getSelected();
-  }
-
-  // public Command getAutonomousCommand() {
-  //   HashMap<String, Command> eventMap = new HashMap<>();
-  //   eventMap.put("RaiseArmToHigh", new AutoSetArmCommandHigh(Constants.ArmStates.High, armSubsystem, telescopeSubsystem));
-  //   eventMap.put("LowerArmToGround", new AutoSetArmCommandLow(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
-  //   eventMap.put("ToggleClaw", new SetClawCommand(ClawStates.Toggle, clawSubsystem));
-  //  // eventMap.put("Wait", new WaitCommand(.5));
-  //   //eventMap.put("Balance", new BalanceCommand(m_robotDrive));
-
-  //   PathPlannerTrajectory TopBalance = PathPlanner.loadPath("TopBalance", new PathConstraints(4, 3));
-  //   HashMap<String, Command> topEventMap = new HashMap<>();
-  //   // topEventMap.put(null, getAutonomousCommand());
-
-  //   PathPlannerTrajectory TopPlace = PathPlanner.loadPath("TopPlace", new PathConstraints(1, .5));
-  //   HashMap<String, Command> topPlaceEventMap = new HashMap<>();
-
-  //   PathPlannerTrajectory MiddleBalance = PathPlanner.loadPath("MiddleBalance", new PathConstraints(.5, .5));
-  //   HashMap<String, Command> middleBalanceEventMap = new HashMap<>();
-
-  //   PathPlannerTrajectory BottomBalance = PathPlanner.loadPath("BottomBalance", new PathConstraints(1, .5));
-  //   HashMap<String, Command> bottomBalanceEventMap = new HashMap<>();
-
-  //   PathPlannerTrajectory BottomPlace = PathPlanner.loadPath("BottomPlace", new PathConstraints(1, .5));
-  //   HashMap<String, Command> bottomPlaceEventMap = new HashMap<>();
-
-  //   PathPlannerTrajectory Straight = PathPlanner.loadPath("Straight", new PathConstraints(1, .5));
-
-  //   PathPlannerTrajectory Simple = PathPlanner.loadPath("Simple", new PathConstraints(2, .5));
-
-  //   PathPlannerTrajectory Middle = PathPlanner.loadPath("Middle", new PathConstraints(2, 1));
-
-  //   PathPlannerTrajectory Bal = PathPlanner.loadPath("Bal", new PathConstraints(2,.5));
-
-
-  //   //PathPlannerTrajectory Fun = PathPlanner.loadPath("Fun", new PathConstraints(2,.5));
-
-  //   SwerveAutoBuilder swerveAutoBuilder = new SwerveAutoBuilder(
-  //       m_robotDrive::getPose,
-  //       m_robotDrive::resetOdometry,
-  //       DriveConstants.kDriveKinematics,
-  //       new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y
-  //                                        // PID controllers)
-  //       new PIDConstants(8, 0.0, 0.0),
-  //       m_robotDrive::setModuleStates,
-  //       eventMap,
-  //       true,
-  //       m_robotDrive);
-
-  //   Command FullAuto = swerveAutoBuilder.fullAuto(Middle);
-
-  //   // Run path following command, then stop at the end.
-  //   // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
-  //   // false));
-  //   return FullAuto;
+  // public SequentialCommandGroup getAutonomousCommand(){
+  //   return m_chooser.getSelected();
   // }
+
+  // public Bal getBal(){
+  //   return bal;
+  // }
+
+  public Command getAutonomousCommand() {
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("RaiseArmToHigh", new SetArmStateCommand(Constants.ArmStates.High, armSubsystem, telescopeSubsystem));
+    eventMap.put("LowerArmToGround", new SetArmStateCommand(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
+    //eventMap.put("ToggleClaw", new SetClawCommand(ClawStates.Toggle, clawSubsystem));
+   // eventMap.put("Wait", new WaitCommand(.5));
+    //eventMap.put("Balance", new BalanceCommand(m_robotDrive));
+
+    PathPlannerTrajectory TopBalance = PathPlanner.loadPath("TopBalance", new PathConstraints(4, 3));
+    HashMap<String, Command> topEventMap = new HashMap<>();
+    // topEventMap.put(null, getAutonomousCommand());
+
+    PathPlannerTrajectory TopPlace = PathPlanner.loadPath("TopPlace", new PathConstraints(1, .5));
+    HashMap<String, Command> topPlaceEventMap = new HashMap<>();
+
+    PathPlannerTrajectory MiddleBalance = PathPlanner.loadPath("MiddleBalance", new PathConstraints(.5, .5));
+    HashMap<String, Command> middleBalanceEventMap = new HashMap<>();
+
+    PathPlannerTrajectory BottomBalance = PathPlanner.loadPath("BottomBalance", new PathConstraints(1, .5));
+    HashMap<String, Command> bottomBalanceEventMap = new HashMap<>();
+
+    PathPlannerTrajectory BottomPlace = PathPlanner.loadPath("BottomPlace", new PathConstraints(1, .5));
+    HashMap<String, Command> bottomPlaceEventMap = new HashMap<>();
+
+    PathPlannerTrajectory Straight = PathPlanner.loadPath("Straight", new PathConstraints(1, .5));
+
+    PathPlannerTrajectory Simple = PathPlanner.loadPath("Simple", new PathConstraints(2, .5));
+
+    PathPlannerTrajectory Middle = PathPlanner.loadPath("Middle", new PathConstraints(2, 1));
+
+    PathPlannerTrajectory Bal = PathPlanner.loadPath("Bal", new PathConstraints(2,.5));
+
+
+    //PathPlannerTrajectory Fun = PathPlanner.loadPath("Fun", new PathConstraints(2,.5));
+
+    SwerveAutoBuilder swerveAutoBuilder = new SwerveAutoBuilder(
+        m_robotDrive::getPose,
+        m_robotDrive::resetOdometry,
+        DriveConstants.kDriveKinematics,
+        new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y
+                                         // PID controllers)
+        new PIDConstants(8, 0.0, 0.0),
+        m_robotDrive::setModuleStates,
+        eventMap,
+        true,
+        m_robotDrive);
+
+    Command FullAuto = swerveAutoBuilder.fullAuto(Bal);
+
+    // Run path following command, then stop at the end.
+    // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
+    // false));
+    return FullAuto;
+  }
 
 
   
 
-  // public SequentialCommandGroup BalanceGroup(boolean Balance){
+  public SequentialCommandGroup BalanceGroup(boolean Balance){
 
-  //   if(Balance){
-  //     balanceSequence = new SequentialCommandGroup(
-  //     getAutonomousCommand(),
-  //     new RepeatCommand(new BalanceCommand(m_robotDrive))
-  //   );
-  //   } else{
-  //     balanceSequence = (SequentialCommandGroup)getAutonomousCommand();
-  //   }
+    if(Balance){
+      balanceSequence = new SequentialCommandGroup(
+      getAutonomousCommand(),
+      new RepeatCommand(new BalanceCommand(m_robotDrive))
+    );
+    } else{
+      balanceSequence = (SequentialCommandGroup)getAutonomousCommand();
+    }
   
-  //   return balanceSequence;
+    return balanceSequence;
 
-  // }
+   }
 
 
   // public SequentialCommandGroup MiddleBalance (){

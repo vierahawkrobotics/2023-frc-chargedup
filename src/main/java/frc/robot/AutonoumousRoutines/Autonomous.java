@@ -10,13 +10,14 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.AutonmousCommands.AutoSetArmCommandLow;
-import frc.robot.AutonmousCommands.AutoSetArmCommandHigh;
-import frc.robot.AutonmousCommands.AutoSetArmCommandLow;
+// import frc.robot.AutonmousCommands.AutoSetArmCommandLow;
+// import frc.robot.AutonmousCommands.AutoSetArmCommandHigh;
+// import frc.robot.AutonmousCommands.AutoSetArmCommandLow;
 import frc.robot.Constants.ClawStates;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.CollectCommand;
 import frc.robot.commands.DepositCommand;
+import frc.robot.commands.SetArmStateCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
@@ -38,10 +39,10 @@ public class Autonomous {
 
     public Command getAutoPath(PathPlannerTrajectory Path) {
         HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put("RaiseArmToHigh", new AutoSetArmCommandHigh(Constants.ArmStates.High, armSubsystem, telescopeSubsystem));
-        eventMap.put("LowerArmToGround", new AutoSetArmCommandLow(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
-        eventMap.put("Collect", new CollectCommand(clawSubsystem));
-        eventMap.put("Deposit", new DepositCommand(clawSubsystem));
+        eventMap.put("RaiseArmToHigh", new SetArmStateCommand(Constants.ArmStates.High, armSubsystem, telescopeSubsystem));
+        eventMap.put("LowerArmToGround", new SetArmStateCommand(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
+        // eventMap.put("Collect", new CollectCommand(clawSubsystem));
+        // eventMap.put("Deposit", new DepositCommand(clawSubsystem));
 
         SwerveAutoBuilder swerveAutoBuilder = new SwerveAutoBuilder(
                 drive::getPose,

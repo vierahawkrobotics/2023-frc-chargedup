@@ -33,9 +33,9 @@ public class MaxMiddle extends SequentialCommandGroup {
         auto = new Autonomous(drive, armSubsystem, telescopeSubsystem, clawSubsystem);
 
         PathPoint startPoint = new PathPoint(new Translation2d(2.55, 3.23), new Rotation2d(0), new Rotation2d(180));
-        PathPoint firstWayPathPoint = new PathPoint(new Translation2d(1.75, 3.23), new Rotation2d(0),
+        PathPoint firstWayPathPoint = new PathPoint(new Translation2d(1.79, 3.23), new Rotation2d(0),
                 new Rotation2d(180));
-        PathPoint secondWayPathPoint = new PathPoint(new Translation2d(2.36, 3.23), new Rotation2d(0),
+        PathPoint secondWayPathPoint = new PathPoint(new Translation2d(2.45, 3.23), new Rotation2d(0),
                 new Rotation2d(180));
 
         PathPoint thirdWayPathPoint = new PathPoint(new Translation2d(5.5, 3.23), new Rotation2d(0),
