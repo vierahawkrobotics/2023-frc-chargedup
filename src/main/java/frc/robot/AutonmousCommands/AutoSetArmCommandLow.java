@@ -23,7 +23,7 @@ public class AutoSetArmCommandLow extends CommandBase {
 
     @Override
     public void initialize() {
-        armSub.setRadian(m_state);
+        armSub.setTargetRadianUsingState(m_state);
         teleSub.setLength(m_state);
     }
 

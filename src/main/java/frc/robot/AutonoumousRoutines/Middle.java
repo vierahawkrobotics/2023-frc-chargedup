@@ -13,19 +13,19 @@ import frc.robot.Constants.ArmStates;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.SetArmStateCommand;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
+import frc.robot.subsystems.motorClawSubsystem;
 
 public class Middle extends SequentialCommandGroup {
     PathPlannerTrajectory Middle;
     DriveSubsystem drive;
     ArmSubsystem armSubsystem;
     TelescopeSubsystem telescopeSubsystem;
-    ClawSubsystem clawSubsystem;
+    motorClawSubsystem clawSubsystem;
     Autonomous auto;
 
-    public Middle(DriveSubsystem drive, ArmSubsystem armSubsystem, TelescopeSubsystem telescopeSubsystem,ClawSubsystem clawSubsystem) {
+    public Middle(DriveSubsystem drive, ArmSubsystem armSubsystem, TelescopeSubsystem telescopeSubsystem,motorClawSubsystem clawSubsystem) {
         this.drive = drive;
         this.armSubsystem = armSubsystem;
         this.telescopeSubsystem = telescopeSubsystem;

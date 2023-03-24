@@ -9,19 +9,19 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
+import frc.robot.subsystems.motorClawSubsystem;
 
 public class SideAutoRoutine extends SequentialCommandGroup {
 
     DriveSubsystem drive;
     ArmSubsystem armSub;
     TelescopeSubsystem teleSub;
-    ClawSubsystem clawSub;
+    motorClawSubsystem clawSub;
     Autonomous auto;
 
-    public SideAutoRoutine(DriveSubsystem drive, ArmSubsystem armSub, TelescopeSubsystem telescopeSub, ClawSubsystem clawSubsystem){
+    public SideAutoRoutine(DriveSubsystem drive, ArmSubsystem armSub, TelescopeSubsystem telescopeSub, motorClawSubsystem clawSubsystem){
         this.drive = drive;
         this.armSub = armSub;
         this.teleSub = telescopeSub;

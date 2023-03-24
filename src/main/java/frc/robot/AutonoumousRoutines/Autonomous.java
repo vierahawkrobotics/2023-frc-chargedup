@@ -15,20 +15,20 @@ import frc.robot.AutonmousCommands.AutoSetArmCommandHigh;
 import frc.robot.AutonmousCommands.AutoSetArmCommandLow;
 import frc.robot.Constants.ClawStates;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.SetClawCommand;
+import frc.robot.commands.CollectCommand;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
+import frc.robot.subsystems.motorClawSubsystem;
 
 public class Autonomous {
     DriveSubsystem drive;
     ArmSubsystem armSubsystem;
     TelescopeSubsystem telescopeSubsystem;
-    ClawSubsystem clawSubsystem;
+    motorClawSubsystem clawSubsystem;
 
     public Autonomous(DriveSubsystem drive, ArmSubsystem armSubsystem, TelescopeSubsystem telescopeSubsystem,
-            ClawSubsystem clawSubsystem) {
+            motorClawSubsystem clawSubsystem) {
         this.drive = drive;
         this.armSubsystem = armSubsystem;
         this.telescopeSubsystem = telescopeSubsystem;
@@ -39,7 +39,7 @@ public class Autonomous {
         HashMap<String, Command> eventMap = new HashMap<>();
         eventMap.put("RaiseArmToHigh", new AutoSetArmCommandHigh(Constants.ArmStates.High, armSubsystem, telescopeSubsystem));
         eventMap.put("LowerArmToGround", new AutoSetArmCommandLow(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
-        eventMap.put("ToggleClaw", new SetClawCommand(ClawStates.Toggle, clawSubsystem));
+        eventMap.put("Collect", new CollectCommand(clawSubsystem));
 
         SwerveAutoBuilder swerveAutoBuilder = new SwerveAutoBuilder(
                 drive::getPose,
