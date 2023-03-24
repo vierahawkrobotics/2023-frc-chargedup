@@ -24,6 +24,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.AutonmousCommands.AutoSetArmCommandHigh;
@@ -35,7 +37,6 @@ import frc.robot.AutonoumousRoutines.SideAutoRoutine;
 import frc.robot.Constants.ArmStates;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -63,10 +64,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotContainer {
   ArmSubsystem armSubsystem;
-  ClawSubsystem clawSubsystem;
+  motorClawSubsystem clawSubsystem;
   TelescopeSubsystem telescopeSubsystem;
   CANdleSystem candleSubsystem;
+  //ClawSubsystem clawSubsystem;
   Autonomous auto;
+
 
   Lemonlight lemonlight;
   LEDSubsystems ledSubsystems;
@@ -86,7 +89,7 @@ public class RobotContainer {
     joystick = new XboxController(0);
 
     armSubsystem = new ArmSubsystem();
-    clawSubsystem = new ClawSubsystem();
+    // clawSubsystem = new PneumaticClawSubsystem();
     telescopeSubsystem = new TelescopeSubsystem();
     candleSubsystem = new CANdleSystem();
     auto = new Autonomous(m_robotDrive, armSubsystem, telescopeSubsystem, clawSubsystem);
@@ -100,6 +103,7 @@ public class RobotContainer {
     m_chooser.addOption("Middle Balance", MiddleBalance);
     SmartDashboard.putData(m_chooser);
   
+
     configureBindings();
   }
 
@@ -118,16 +122,25 @@ public class RobotContainer {
     // Constants.armHeight;},telescopeSubsystem, armSubsystem));
     
     
+    new Trigger(joystickArm.povUp(new EventLoop()))
+        .onTrue(new JoystickArmStateCommand(1, armSubsystem, telescopeSubsystem));
+    new Trigger(joystickArm.povDown(new EventLoop()))
+        .onTrue(new JoystickArmStateCommand(-1, armSubsystem, telescopeSubsystem));
+    // new JoystickButton(joystickArm, 1).onTrue(new SetClawCommand(ClawStates.Toggle, clawSubsystem));
+
     new JoystickButton(joystick, 1).whileTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
     new JoystickButton(joystick, 2).whileTrue(new RepeatCommand(new BalanceCommand(m_robotDrive)));
+    
     new JoystickButton(joystick, Button.kR1.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
+    .whileTrue(new RunCommand(
+      () -> m_robotDrive.setX(),
+      m_robotDrive));
+      
+    new JoystickButton(joystickArm, 1).whileTrue(new RepeatCommand(new DepositCommand(clawSubsystem)));
+    new JoystickButton(joystickArm, 2).onTrue(new CollectCommand(clawSubsystem));
 
-    new JoystickButton(joystickArm, Constants.XboxControllerButtonLayout.Y).onTrue(new SetArmStateCommand(Constants.ArmStates.Middle, armSubsystem, telescopeSubsystem));
-    new JoystickButton(joystickArm, Constants.XboxControllerButtonLayout.B).onTrue(new SetArmStateCommand(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
-    new JoystickButton(joystickArm, Constants.XboxControllerButtonLayout.A).onTrue(new SetClawCommand(ClawStates.Toggle, clawSubsystem));
+    // new JoystickButton(joystickArm, Constants.XboxControllerButtonLayout.Y).onTrue(new SetArmStateCommand(Constants.ArmStates.Middle, armSubsystem, telescopeSubsystem));
+    // new JoystickButton(joystickArm, Constants.XboxControllerButtonLayout.B).onTrue(new SetArmStateCommand(Constants.ArmStates.Ground, armSubsystem, telescopeSubsystem));
     
     new Trigger(joystickArm.povUp(new EventLoop()))
     .onTrue(new JoystickArmStateCommand(1, armSubsystem, telescopeSubsystem));
@@ -136,11 +149,11 @@ public class RobotContainer {
     // new JoystickButton(joystick,
     // Constants.CandleConstants.BlockButton).whenPressed(ledSubsystems::setColors,
     // ledSubsystems);
+    
+ 
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
                 MathUtil.applyDeadband(-joystick.getLeftY(), 0.15),
@@ -148,6 +161,18 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-joystick.getRightX(), 0.15),
                 true),
             m_robotDrive));
+
+    armSubsystem.setDefaultCommand(
+        new RunCommand(() -> armSubsystem.updatePID(MathUtil.clamp(joystickArm.getLeftY(),
+            -Constants.RotationArmConstants.angleAdjustmentRange, Constants.RotationArmConstants.angleAdjustmentRange)),
+            armSubsystem));
+
+    telescopeSubsystem.setDefaultCommand(
+        new RunCommand(() -> telescopeSubsystem.setPosition(), telescopeSubsystem));
+
+    clawSubsystem.setDefaultCommand(
+        new RunCommand(() -> clawSubsystem.updatePID(), clawSubsystem));
+
   }
 
   public SequentialCommandGroup getAutonomousCommand(){

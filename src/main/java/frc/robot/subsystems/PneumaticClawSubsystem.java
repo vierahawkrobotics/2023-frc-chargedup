@@ -12,7 +12,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
-public class ClawSubsystem extends SubsystemBase {
+public class PneumaticClawSubsystem extends SubsystemBase {
     DoubleSolenoid solenoid1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
 
     ClawStates clawState;
@@ -20,7 +20,7 @@ public class ClawSubsystem extends SubsystemBase {
 
     private static boolean isClawOpen = true;
 
-    public ClawSubsystem() {
+    public PneumaticClawSubsystem() {
         setName("claw");
         solenoid1.set(Value.kForward);
         clawState = ClawStates.Closed;

@@ -24,7 +24,7 @@ public class SetArmStateCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        arm_subsystem.setRadian(m_state);
+        arm_subsystem.setTargetRadianUsingState(m_state);
         tSubsystem.setLength(m_state);
     }
 

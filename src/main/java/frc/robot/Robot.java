@@ -51,16 +51,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledExit() {
-    m_robotContainer.armSubsystem.setRadian(Constants.ArmStates.Ground);
+    m_robotContainer.armSubsystem.setTargetRadianUsingState(Constants.ArmStates.Ground);
     m_robotContainer.telescopeSubsystem.setLength(Constants.ArmStates.Ground);
-    m_robotContainer.telescopeSubsystem.pid.reset();
-    m_robotContainer.armSubsystem.armPID.reset();
+    m_robotContainer.telescopeSubsystem.telePID.reset();
+    m_robotContainer.armSubsystem.elbowPID.reset();
   }
 
   @Override
   public void autonomousInit() {
     //m_autonomousCommand = m_robotContainer.middleBalance();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
