@@ -32,6 +32,8 @@ public class motorClawSubsystem extends SubsystemBase {
         // clawMotor.getEncoder().setVelocityConversionFactor(2 * Math.PI);
         clawMotor.setIdleMode(IdleMode.kBrake);
 
+        clawMotor.setSmartCurrentLimit(35);
+
         collectionSpeedWidget = Shuffleboard.getTab("Main").getLayout("Claw Speed", BuiltInLayouts.kList).withPosition(1, 2).withSize(1, 2).withProperties(Map.of("Label Position", "TOP")).add("Collection RPM", Constants.motorClawSubsystemConstants.collectionSpeed).withSize(1, 2).getEntry();
         depositSpeedWidget = Shuffleboard.getTab("Main").getLayout("Claw Speed", BuiltInLayouts.kList).add("Deposit RPM", Constants.motorClawSubsystemConstants.depositSpeed).withSize(1, 2).getEntry();
     }
@@ -56,14 +58,14 @@ public class motorClawSubsystem extends SubsystemBase {
         //     input = 0;
         // targetRotationalSpeed = 0;
 
-        double input = 0.1;
+        double input = -0.1;
         
         if(collect){
-            input = 0.2;
+            input = -0.5;
         }
 
         if(deposit){
-            input = -0.2;
+            input = 0.2;
         }
        
         clawMotor.set(input);
