@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSink;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -15,17 +20,26 @@ import frc.robot.subsystems.TelescopeSubsystem;
 
 public class Robot extends TimedRobot {
 
-private Command m_autonomousCommand;
+  UsbCamera camera1;
+  UsbCamera camera2;
+  VideoSink server;
+  NetworkTableEntry cameraSelection;
+
+  private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
 
   @Override
   public void robotInit() {
+    camera1 = CameraServer.startAutomaticCapture(0);
+    cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
+    server = CameraServer.getServer();
     m_robotContainer = new RobotContainer();
   }
 
   @Override
   public void robotPeriodic() {
+    server.setSource(camera1);
     CommandScheduler.getInstance().run();
   }
 
@@ -35,7 +49,8 @@ private Command m_autonomousCommand;
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   @Override
   public void disabledExit() {
@@ -50,13 +65,14 @@ private Command m_autonomousCommand;
     m_autonomousCommand = m_robotContainer.BalanceGroup(true);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-    }    
+    }
   }
 
   @Override
-  public void autonomousPeriodic() { 
+  public void autonomousPeriodic() {
     m_autonomousCommand.execute();
   }
+
   @Override
   public void autonomousExit() {
     BalanceCommand.isFinished = true;
@@ -70,10 +86,12 @@ private Command m_autonomousCommand;
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+  }
 
   @Override
   public void testInit() {
@@ -81,8 +99,10 @@ private Command m_autonomousCommand;
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   @Override
-  public void testExit() {}
+  public void testExit() {
+  }
 }
