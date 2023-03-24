@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -31,15 +33,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    camera1 = CameraServer.startAutomaticCapture(0);
-    cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
-    server = CameraServer.getServer();
+    CameraServer.startAutomaticCapture();
+    // camera1 = CameraServer.startAutomaticCapture(0);
+    // cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
+    // server = CameraServer.getServer();
     m_robotContainer = new RobotContainer();
   }
 
   @Override
   public void robotPeriodic() {
-    server.setSource(camera1);
+    // server.setSource(camera1);
     CommandScheduler.getInstance().run();
   }
 

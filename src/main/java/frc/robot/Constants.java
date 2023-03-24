@@ -66,7 +66,7 @@ public class Constants {
     public final static double lowGoalRadian = 0.3;
     public final static double middleGoalRadian = 1.58;
     public final static double highGoalRadian = 1.95;
-    public final static double groundGoalRadian = 0;
+    public final static double groundGoalRadian = 0.0;
 
     public final static double angleAdjustmentRange = Math.toRadians(10);
   }
