@@ -41,11 +41,6 @@ public class ArmSubsystem extends SubsystemBase {
         elbowPID.setIntegratorRange(-1, 1);
 
 
-              
-
-
-
-
         // Shuffleboard
         ShuffleboardTab tab = Shuffleboard.getTab("Arm Rotation");
         //tab.addNumber(getName(), null)
@@ -105,8 +100,8 @@ public class ArmSubsystem extends SubsystemBase {
      * @param radians Calculates the elbowPID, radians, and gets position
      */
     public void updatePID(double adjust) {
+        if (!isAdjustable) adjust = 0;
         double setpoint = targetRadian - adjust;
-        // System.out.println(setpoint);
         double v = elbowPID.calculate(getPosition(), setpoint);
         if(v < 0.01 && v > -0.01) v = 0;
         if(v > 0.8) v = 0.8;

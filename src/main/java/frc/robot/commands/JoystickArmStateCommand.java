@@ -33,11 +33,8 @@ public class JoystickArmStateCommand extends CommandBase {
             case Low:
                 currentState = Constants.ArmStates.Middle;
                 return;
-            case Collect:
-                currentState = Constants.ArmStates.Low;
-                return;
             case Ground:
-                currentState = Constants.ArmStates.Collect;
+                currentState = Constants.ArmStates.Low;
                 return;
         }
     }
@@ -47,18 +44,15 @@ public class JoystickArmStateCommand extends CommandBase {
         switch (currentState) {
             case Ground:
                 return;
-            case Collect:
-                currentState = Constants.ArmStates.Ground;
-                return;
             case Low:
-                currentState = Constants.ArmStates.Collect;
+                currentState = Constants.ArmStates.Ground;
                 return;
             case Middle:
                 currentState = Constants.ArmStates.Low;
                 return;
             case High:
                 currentState = Constants.ArmStates.Middle;
-                return;
+                 return;
         }
     }
 

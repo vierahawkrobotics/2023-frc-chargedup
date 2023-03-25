@@ -21,7 +21,7 @@ public class BalanceCommand extends CommandBase {
     public static boolean isFinished = false;
 
     public double adjust = 0;
-    public static PIDController gyroPID = new PIDController(0.006, 0, 0.001);
+    public static PIDController gyroPID = new PIDController(0.006, 0.001, 0.001);
 
     public BalanceCommand(DriveSubsystem drive) {
         this.drive = drive;
