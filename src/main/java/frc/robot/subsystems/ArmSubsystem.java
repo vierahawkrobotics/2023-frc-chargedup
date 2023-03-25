@@ -106,7 +106,7 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public void updatePID(double adjust) {
         double setpoint = targetRadian - adjust;
-        System.out.println(setpoint);
+        // System.out.println(setpoint);
         double v = elbowPID.calculate(getPosition(), setpoint);
         if(v < 0.01 && v > -0.01) v = 0;
         if(v > 0.8) v = 0.8;

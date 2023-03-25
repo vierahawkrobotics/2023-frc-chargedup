@@ -44,7 +44,7 @@ public class motorClawSubsystem extends SubsystemBase {
 
     public void updatePID(boolean collectCube, boolean depositCube, boolean collectCone, boolean depositCone) {
 
-        double input = -0.05;
+        double input = -0.10;
         
         if(collectCube){
             input = -0.3;
@@ -55,12 +55,15 @@ public class motorClawSubsystem extends SubsystemBase {
         }
 
         if (collectCone){
-            input = -0.5;
+            input = -0.75;
         }
 
         if (depositCone){
             input = 0.3;
         }
+
+        System.out.println(clawMotor.getOutputCurrent());
+
        
         clawMotor.set(input);
     }

@@ -49,7 +49,7 @@ public class Constants {
                                                                                                // 27
 
     public final static double groundGoalTeleLength = 0.015 * ArmBLength;
-    public final static double lowGoalTeleLength = Units.inchesToMeters(7);;
+    public final static double lowGoalTeleLength = Units.inchesToMeters(4);;
     public final static double collectGoalTeleLength = Units.inchesToMeters(7);
     public final static double middleGoalTeleLength = .60 * ArmBLength;
     public final static double highGoalTeleLength = 1 * ArmBLength;
@@ -63,7 +63,7 @@ public class Constants {
     public final static int armMotorID = 9;
     public final static double ArmALength = 0.6477;
 
-    public final static double lowGoalRadian = 0.3;
+    public final static double lowGoalRadian = 0.22;
     public final static double middleGoalRadian = 1.58;
     public final static double highGoalRadian = 1.95;
     public final static double groundGoalRadian = 0.0;
