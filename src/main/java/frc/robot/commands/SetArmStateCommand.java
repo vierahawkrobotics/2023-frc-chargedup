@@ -24,22 +24,29 @@ public class SetArmStateCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        System.out.println("Initalizing");
         arm_subsystem.setTargetRadianUsingState(m_state);
         tSubsystem.setLength(m_state);
     }
 
     @Override
     public void execute() {
+        System.out.println("Exuecting");
+
 
     }
 
     @Override
     public void end(boolean ending) {
+        System.out.println("ending");
+
         
     }
 
     @Override
     public boolean isFinished() {
+        System.out.println("isfinished");
+
         return true;
     }
 }

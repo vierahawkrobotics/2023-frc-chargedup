@@ -62,7 +62,9 @@ public class motorClawSubsystem extends SubsystemBase {
             input = 0.3;
         }
 
-        System.out.println(clawMotor.getOutputCurrent());
+        //System.out.println(clawMotor.getOutputCurrent());
+        //System.out.println("claw PID update");
+
 
        
         clawMotor.set(input);

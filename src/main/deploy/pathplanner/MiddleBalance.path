@@ -28,41 +28,16 @@
     },
     {
       "anchorPoint": {
-        "x": 1.9436095078279165,
-        "y": 3.294737549662454
+        "x": 1.78,
+        "y": 3.3
       },
       "prevControl": {
-        "x": 1.9148123756566129,
-        "y": 3.287538266619628
+        "x": 1.7512028678286964,
+        "y": 3.292800716957174
       },
       "nextControl": {
-        "x": 1.9811563744907363,
-        "y": 3.304124266328159
-      },
-      "holonomicAngle": 180.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": true,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 2.35,
-        "y": 3.294737549662454
-      },
-      "prevControl": {
-        "x": 1.9557579000403904,
-        "y": 3.2759641163310436
-      },
-      "nextControl": {
-        "x": 2.7442420999596098,
-        "y": 3.313510982993864
+        "x": 1.8175468666628198,
+        "y": 3.309386716665705
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -82,12 +57,12 @@
         "y": 3.3041242663281585
       },
       "prevControl": {
-        "x": 5.886439378409591,
-        "y": 3.347343955532954
+        "x": 5.703357836971663,
+        "y": 3.3041242663281585
       },
       "nextControl": {
-        "x": 5.7812265666685905,
-        "y": 3.294737549662454
+        "x": 5.820989336550046,
+        "y": 3.3041242663281585
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -114,7 +89,7 @@
         "x": 5.6558693212,
         "y": 3.2739019831669642
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -136,7 +111,7 @@
         "y": 3.3041242663281585
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,

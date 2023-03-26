@@ -101,6 +101,8 @@ public class TelescopeSubsystem extends SubsystemBase {
         if (setpoint < -0.3)
             setpoint = -0.3;
         motor.set(setpoint);
+        //System.out.println("scope PID update");
+
     }
 
     public void setLength(double length){

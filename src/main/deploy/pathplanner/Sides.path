@@ -16,10 +16,12 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "names": [
+          "RaiseArmToHigh"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
+        "waitTime": 0.5
       }
     },
     {
@@ -32,19 +34,21 @@
         "y": 4.48327345548433
       },
       "nextControl": {
-        "x": 1.9248360744965065,
-        "y": 4.505623999538398
+        "x": 1.8502278804781773,
+        "y": 4.48327345548433
       },
       "holonomicAngle": 180.0,
-      "isReversal": false,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "names": [
+          "Deposit"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
+        "waitTime": 0.5
       }
     },
     {
@@ -89,12 +93,14 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "RaiseArmToLow"
+        ],
         "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "after",
+        "waitTime": 0.5
       }
     },
     {
@@ -164,7 +170,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -177,19 +183,19 @@
     {
       "position": 0.0,
       "names": [
-        "RaiseArmToHigh"
+        "event"
       ]
     },
     {
-      "position": 1.0,
+      "position": 0.0,
       "names": [
-        "ToggleClaw"
+        "event"
       ]
     },
     {
-      "position": 2.97,
+      "position": 0.0,
       "names": [
-        "LowerArmToGround"
+        "event"
       ]
     }
   ]

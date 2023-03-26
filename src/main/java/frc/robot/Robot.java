@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.BalanceGroup(true);
+    m_autonomousCommand = m_robotContainer.getMainMiddle();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    m_autonomousCommand.execute();
+    //m_autonomousCommand.execute();
   }
 
   @Override

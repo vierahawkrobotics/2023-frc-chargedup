@@ -112,6 +112,9 @@ public class ArmSubsystem extends SubsystemBase {
         if(v > 0.8) v = 0.8;
         if(v < -0.8) v = -0.8;
         elbowMotor.set(v);
+
+        //System.out.println("arm PID update");
+        //System.out.println(getState());
     }
     
     /***
