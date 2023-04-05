@@ -35,8 +35,8 @@ public class Constants {
       
 
       public static final class TelescopeArmConstants{
-        public final static double ScopeP = 1.7;
-        public final static double ScopeI = 0.35;
+        public final static double ScopeP = 0.8;
+        public final static double ScopeI = 0.12;
         public final static double ScopeD = 0;
 
         public final static int scopeMotorID = 10;
@@ -51,7 +51,7 @@ public class Constants {
       }
       
       public static final class RotationArmConstants{
-        public final static double ArmP = 1.0;
+        public final static double ArmP = 0.5;
         public final static double ArmI = 0.00;
         public final static double ArmD = 0.05;
 
@@ -67,8 +67,8 @@ public class Constants {
       public static final class DriveConstants {
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
-        public static final double kMaxSpeedMetersPerSecond = 4;
-        public static final double kMaxAngularSpeed = 2*Math.PI; // radians per second
+        public static final double kMaxSpeedMetersPerSecond = 1;
+        public static final double kMaxAngularSpeed = 1*Math.PI; // radians per second
         
         // Chassis configuration
       public static final double kTrackWidth = Units.inchesToMeters(21.625);
